@@ -155,25 +155,31 @@ Obsidian 1.0 — Forged in molten steel
 
 ## 💾 Download
 
-### Current Release: v1.0
+### Current Release: v1.1 (Custom Kernel)
 
-**File**: `Obsidian-v1.0-Forged-20260105-2150.iso`
+**File**: `Obsidian-v1.1-Rebranded-20260106-1356.iso`
 
 | Property | Value |
 |----------|-------|
-| **Size** | 1.4 GB (1,492,643,840 bytes) |
+| **Size** | 4.7 GB |
 | **Format** | ISO 9660 (hybrid) |
 | **Bootable** | BIOS + UEFI |
 | **USB Compatible** | Yes (hybrid ISO) |
-| **Release Date** | 2026-01-05 |
-| **Build Time** | 21:50 UTC |
+| **Kernel** | 6.1.158-obsidian-obsidian (Custom) |
+| **Release Date** | 2026-01-06 |
+| **Build Time** | 13:56 UTC |
 
-**MD5 Checksum**: (Generate with `md5sum Obsidian-*.iso`)
+**MD5 Checksum**: `0968e2a909060b2b24757c2364b53191`
 
-**Download Mirrors**:
-- Primary: [Coming soon]
-- Torrent: [Coming soon]
-- Mirror 1: [Coming soon]
+**Download**:
+- **GitHub Release**: [v1.1](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.1)
+- **Note**: ISO exceeds GitHub's 2GB limit - contact for download link
+
+### Previous Release: v1.0
+
+**File**: `Obsidian-v1.0-Forged-20260105-2150.iso` (1.4 GB)
+- **GitHub Release**: [v1.0](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.0)
+- Stock Debian kernel (6.1.0-41-amd64)
 
 ### Verification
 
@@ -396,9 +402,12 @@ source ~/.bashrc
 
 ### Kernel
 
-**Version**: 6.1.0-41-amd64  
-**Type**: Debian kernel (SMP PREEMPT_DYNAMIC)  
-**Custom Kernel**: Available in v2.0 roadmap
+**Version (v1.1)**: 6.1.158-obsidian-obsidian (Custom Obsidian Kernel)  
+**Version (v1.0)**: 6.1.0-41-amd64 (Stock Debian Kernel)  
+**Type**: SMP PREEMPT_DYNAMIC  
+**Build**: Compiled from source with full Obsidian branding  
+**Hostname**: obsidian (default)  
+**Signature**: #obsidian
 
 ---
 
@@ -429,6 +438,33 @@ source ~/.bashrc
 ---
 
 ## 📝 Changelog
+
+### v1.1 (2026-01-06) - "Custom Obsidian Kernel"
+
+**Major Update: Fully Rebranded Kernel**
+
+#### Added
+- ✨ **Custom Obsidian Kernel 6.1.158-obsidian-obsidian** compiled from source
+- ✨ Kernel branding: `#obsidian SMP PREEMPT_DYNAMIC`
+- ✨ Custom default hostname: `obsidian`
+- ✨ Full module set for maximum hardware compatibility
+- ✨ Kernel config with `CONFIG_LOCALVERSION="-obsidian"`
+
+#### Changed
+- 🔄 Kernel from stock Debian (6.1.0-41-amd64) to custom Obsidian (6.1.158-obsidian-obsidian)
+- 🔄 Removed all Debian kernel maintainer references
+- 🔄 ISO size increased to 4.7 GB (from 1.4 GB) due to complete module set
+- 🔄 Initramfs rebuilt for new kernel
+
+#### Technical
+- 📦 Kernel: 6.1.158-obsidian-obsidian
+- 📦 Compiled: GCC 12.2.0
+- 📦 Build: Safe & compatible mode (all modules included)
+- 📦 ISO Size: 4.7 GB
+- 📦 Build Date: 2026-01-06 13:56 UTC
+- 📦 Build Time: ~2.5 hours (2-core system)
+
+---
 
 ### v1.0 (2026-01-05) - "Forged in Molten Steel"
 
