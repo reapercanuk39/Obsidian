@@ -1,0 +1,35 @@
+# ISO files
+*.iso
+*.img
+
+# Build artifacts
+rootfs/
+iso/
+efi-img/
+build/
+dist/
+
+# Checksums (except committed ones)
+*.md5
+!Obsidian-*.md5
+
+# Compressed files
+*.tar.gz
+*.tar.xz
+*.zip
+*.squashfs
+
+# Temporary files
+*.tmp
+*.log
+*~
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Editor files
+*.swp
+*.swo
+.vscode/
+.idea/
