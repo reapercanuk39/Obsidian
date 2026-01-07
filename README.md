@@ -2,7 +2,7 @@
 
 **A Debian-based Linux distribution with custom VALYRIAN-Molten-Steel theming**
 
-[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://reads-leader-guided-icq.trycloudflare.com/iso/Obsidian-v1.5-Rebranded-20260107-1845.iso)
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
 
 [![Version](https://img.shields.io/badge/version-1.5-orange.svg)](https://github.com/reapercanuk39/Obsidian)
 [![Base](https://img.shields.io/badge/base-Debian%2012-red.svg)](https://www.debian.org/)
@@ -159,19 +159,21 @@ Obsidian 1.0 — Forged in molten steel
 
 ### Current Release: v1.5 (Optimized - 71% Smaller!)
 
-[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://reads-leader-guided-icq.trycloudflare.com/iso/Obsidian-v1.5-Rebranded-20260107-1845.iso)
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
+
+**📥 [Download from GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.5)** ⬅️ Click here to download!
 
 | Property | Value |
 |----------|-------|
-| **File** | `Obsidian-v1.5-Rebranded-20260107-1845.iso` |
-| **Size** | 📦 **1.2 GB** (was 4.2 GB - 71% reduction!) |
+| **File** | `Obsidian-v1.5-Rebranded-20260107-2312.iso` |
+| **Size** | 📦 **1.1 GB** (was 4.7 GB - 77% reduction!) |
 | **Format** | ISO 9660 (hybrid) |
 | **Bootable** | BIOS + UEFI ✅ |
 | **USB Compatible** | Yes (hybrid ISO) |
 | **Kernel** | 6.1.158-obsidian-obsidian (Custom) |
-| **Release Date** | 2026-01-07 18:45 UTC |
-| **MD5 Checksum** | `a36ac11a7ac4e6881b80311f39c1aa97` |
-| **Download Time** | ~16 min @ 10 Mbps (was 56 min) |
+| **Release Date** | 2026-01-07 23:12 UTC |
+| **MD5 Checksum** | `3af1195235b268206983a8864004ee0d` |
+| **Download Time** | ~15 min @ 10 Mbps (was 63 min) |
 
 **Default Credentials:**
 | | |
@@ -181,22 +183,24 @@ Obsidian 1.0 — Forged in molten steel
 
 > ⚠️ **Security Note:** Please change your password after first login using `passwd`
 
-### Previous Releases
+### All Releases
 
-**File**: `Obsidian-v1.0-Forged-20260105-2150.iso` (1.4 GB)
-- **GitHub Release**: [v1.0](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.0)
-- Stock Debian kernel (6.1.0-41-amd64)
+View all releases on GitHub: **[Releases Page](https://github.com/reapercanuk39/Obsidian/releases)**
+
+- **v1.5** (Latest) - Optimized 1.1 GB, UEFI boot fixed
+- **v1.1** - Custom Obsidian kernel
+- **v1.0** - Initial release
 
 ### Verification
 
 ```bash
 # Verify download integrity
-md5sum Obsidian-v1.5-Rebranded-20260107-1845.iso
-# Should output: a36ac11a7ac4e6881b80311f39c1aa97
+md5sum Obsidian-v1.5-Rebranded-20260107-2312.iso
+# Should output: 3af1195235b268206983a8864004ee0d
 
-# Or download the .md5 file
-wget https://reads-leader-guided-icq.trycloudflare.com/iso/Obsidian-v1.5-Rebranded-20260107-1845.iso.md5
-md5sum -c Obsidian-v1.5-Rebranded-20260107-1845.iso.md5
+# Or download the .md5 file from GitHub releases
+curl -LO https://github.com/reapercanuk39/Obsidian/releases/download/v1.5/Obsidian-v1.5-Rebranded-20260107-2312.iso.md5
+md5sum -c Obsidian-v1.5-Rebranded-20260107-2312.iso.md5
 ```
 
 ---
@@ -445,23 +449,27 @@ source ~/.bashrc
 
 ## 📝 Changelog
 
-### v1.5 Optimized (2026-01-07 18:45 UTC) - "Lightweight & Fast"
+### v1.5 Optimized (2026-01-07 23:12 UTC) - "Lightweight & Fast"
 
-**Major Update: 71% Size Reduction + UEFI Boot Fixed**
+**Major Update: 77% Size Reduction + Structure Cleanup + UEFI Boot Fixed**
 
 #### Added
 - ✨ Comprehensive testing suite (19/19 tests passing)
 - ✨ Automated build scripts with optimization tools
 - ✨ Full documentation in REBUILD-CHANGELOG.md
 - ✨ ISO-OPTIMIZATION-GUIDE.md for future improvements
+- ✨ GitHub Releases integration for easy downloads
 
 #### Changed
-- 🚀 **ISO size: 4.2 GB → 1.2 GB** (71% reduction!)
+- 🚀 **ISO size: 4.7 GB → 1.1 GB** (77% reduction!)
 - 🚀 **Build time: 25 min → 8 min** (3x faster)
-- 🚀 **Download time: 56 min → 16 min** @ 10 Mbps
+- 🚀 **Download time: 63 min → 15 min** @ 10 Mbps
 - 🔄 Removed 17 GB kernel source code (not needed for live system)
+- 🔄 Removed legacy /casper directory (51 MB unused files)
+- 🔄 Removed backup files from ISO (10 MB)
+- 🔄 Fixed broken rootfs symlinks to point to Obsidian kernel
 - 🔄 Cleaned APT cache (85 MB)
-- 🔄 Removed old stock kernel (85 MB)
+- 🔄 Removed old stock kernel files (1 MB)
 - 🔄 Optimized rootfs: 22 GB → 3.9 GB
 
 #### Fixed
@@ -469,16 +477,18 @@ source ~/.bashrc
 - 🐛 BdsDxe "No bootable option" error resolved
 - 🐛 EFI System Partition structure corrected
 - 🐛 All boot configurations now use `/obsidian/` paths consistently
+- 🐛 Fixed all kernel symlinks to point to correct Obsidian kernel
 
 #### Technical
 - 📦 Kernel: 6.1.158-obsidian-obsidian (Custom)
-- 📦 ISO Size: **1.2 GB** (optimized)
-- 📦 Squashfs: 1.1 GB (XZ compressed with parallel processing)
-- 📦 Rootfs: 3.9 GB (cleaned)
-- 📦 Build Date: 2026-01-07 18:45 UTC
-- 📦 MD5: `a36ac11a7ac4e6881b80311f39c1aa97`
+- 📦 ISO Size: **1.1 GB** (optimized & cleaned)
+- 📦 Squashfs: 1.0 GB (XZ compressed with parallel processing)
+- 📦 Rootfs: 3.9 GB (cleaned & optimized)
+- 📦 Build Date: 2026-01-07 23:12 UTC
+- 📦 MD5: `3af1195235b268206983a8864004ee0d`
 - 📦 Boot: BIOS ✅ + UEFI ✅ (both tested)
 - 📦 Testing: 19/19 comprehensive tests passed
+- 📦 Download: Available on [GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.5)
 
 ---
 
@@ -746,7 +756,7 @@ This is an independent distribution based on Debian. It is not affiliated with o
 
 **Version 1.5** | **Released: 2026-01-07**
 
-[![Download](https://img.shields.io/badge/Download-ISO-orange.svg)](#download)
+[![Download](https://img.shields.io/badge/Download-ISO-orange.svg)](https://github.com/reapercanuk39/Obsidian/releases/latest)
 [![Documentation](https://img.shields.io/badge/Docs-Available-blue.svg)](#documentation)
 [![License](https://img.shields.io/badge/License-GPL--3.0-green.svg)](LICENSE)
 
