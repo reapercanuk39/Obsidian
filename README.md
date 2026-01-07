@@ -498,8 +498,8 @@ source ~/.bashrc
 
 #### Added
 - ✨ Default credentials: `obsidian` / `toor` for easy first boot
-- ✨ HTTP download mirror at `https://reads-leader-guided-icq.trycloudflare.com/iso/`
 - ✨ Proper `/obsidian/` boot directory structure
+- ✨ GitHub Releases for easy ISO distribution
 
 #### Changed
 - 🔄 Rebuilt squashfs with updated password
