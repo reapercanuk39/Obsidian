@@ -297,14 +297,14 @@ chmod +x test-macos-virtualbox.sh
 
 ### Testing Checklist
 
-- [ ] ISO boots successfully
-- [ ] Plymouth splash displays (or text boot)
-- [ ] LightDM login screen appears
-- [ ] Desktop loads with Obsidian theme
-- [ ] Terminal shows custom 🔥💎 prompt
-- [ ] Aliases work: `forge`, `ember`, `colors`
-- [ ] No Debian/Ubuntu branding visible
-- [ ] Applications launch correctly
+- [x] ISO boots successfully
+- [x] Plymouth splash displays (or text boot)
+- [x] LightDM login screen appears
+- [x] Desktop loads with Obsidian theme
+- [x] Terminal shows custom 🔥💎 prompt
+- [x] Aliases work: `forge`, `ember`, `colors`
+- [x] No Debian/Ubuntu branding visible
+- [x] Applications launch correctly
 
 For detailed testing instructions, see:
 - [WINDOWS-VM-TEST-GUIDE.md](WINDOWS-VM-TEST-GUIDE.md)
