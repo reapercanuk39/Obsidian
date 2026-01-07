@@ -1,8 +1,10 @@
-# 🔥 Obsidian OS v1.0 - Forged in Molten Steel 💎
+# 🔥 Obsidian OS v1.5 - Forged in Molten Steel 💎
 
 **A Debian-based Linux distribution with custom VALYRIAN-Molten-Steel theming**
 
-[![Version](https://img.shields.io/badge/version-1.0-orange.svg)](https://github.com/obsidian-os)
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](http://104.207.135.98/iso/Obsidian-v1.5-Rebranded-20260107-0130.iso)
+
+[![Version](https://img.shields.io/badge/version-1.5-orange.svg)](https://github.com/reapercanuk39/Obsidian)
 [![Base](https://img.shields.io/badge/base-Debian%2012-red.svg)](https://www.debian.org/)
 [![Desktop](https://img.shields.io/badge/desktop-XFCE4-blue.svg)](https://xfce.org/)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
@@ -155,27 +157,29 @@ Obsidian 1.0 — Forged in molten steel
 
 ## 💾 Download
 
-### Current Release: v1.1 (Custom Kernel)
+### Current Release: v1.5 (Rebranded)
 
-**File**: `Obsidian-v1.1-Rebranded-20260106-1356.iso`
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](http://104.207.135.98/iso/Obsidian-v1.5-Rebranded-20260107-0130.iso)
 
 | Property | Value |
 |----------|-------|
-| **Size** | 4.7 GB |
+| **File** | `Obsidian-v1.5-Rebranded-20260107-0130.iso` |
+| **Size** | 5.0 GB |
 | **Format** | ISO 9660 (hybrid) |
 | **Bootable** | BIOS + UEFI |
 | **USB Compatible** | Yes (hybrid ISO) |
-| **Kernel** | 6.1.158-obsidian-obsidian (Custom) |
-| **Release Date** | 2026-01-06 |
-| **Build Time** | 13:56 UTC |
+| **Kernel** | 6.1.0-41-amd64 |
+| **Release Date** | 2026-01-07 |
 
-**MD5 Checksum**: `0968e2a909060b2b24757c2364b53191`
+**Default Credentials:**
+| | |
+|--|--|
+| **Username** | `obsidian` |
+| **Password** | `toor` |
 
-**Download**:
-- **GitHub Release**: [v1.1](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.1)
-- **Note**: ISO exceeds GitHub's 2GB limit - contact for download link
+> ⚠️ **Security Note:** Please change your password after first login using `passwd`
 
-### Previous Release: v1.0
+### Previous Releases
 
 **File**: `Obsidian-v1.0-Forged-20260105-2150.iso` (1.4 GB)
 - **GitHub Release**: [v1.0](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.0)
