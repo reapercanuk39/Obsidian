@@ -3003,3 +3003,216 @@ All download infrastructure now uses GitHub Releases. Users can easily download 
 **Release URL**: https://github.com/reapercanuk39/Obsidian/releases/tag/v1.5  
 **Result**: SUCCESS ✅
 
+
+---
+
+## 🎨 v1.6 Enhancement Implementation (2026-01-07 23:47 - 23:51 UTC)
+
+### Session Goal
+Implement user-requested enhancements while preserving the "forged in steel" aesthetic.
+
+### Enhancements Implemented
+
+#### 1. Performance Optimization: Preload ✅
+**Package**: preload (0.6.4-5+b1)
+**Purpose**: Learns commonly used applications and preloads them into RAM
+**Benefits**:
+- Faster application launches
+- Improved perceived performance
+- Automatic learning (no configuration needed)
+- **Size**: ~1 MB
+
+#### 2. Icon Theme Upgrade: Papirus ✅
+**Theme**: Papirus Icon Theme (20230104-2)
+**Customization**: All folder icons recolored to ember orange (#FF7A1A)
+**Statistics**:
+- **10,992 folder icons** customized to match Obsidian theme
+- Includes Papirus, Papirus-Dark, and Papirus-Light variants
+- Modern flat design with 8,000+ application icons
+- Consistent look across all file types
+
+**Command Used**:
+```bash
+find rootfs/usr/share/icons/Papirus -name "folder*.svg" -exec sed -i 's/#5294e2/#FF7A1A/g' {} \;
+```
+
+#### 3. Size Optimization: Documentation & Locales ✅
+**Documentation Cleanup**:
+- Before: 107 MB
+- After: 80 MB
+- **Saved: 27 MB**
+- Kept: copyright files, changelogs (essentials only)
+- Removed: All other documentation
+
+**Locale Cleanup**:
+- Before: 271 MB (224 locales)
+- After: 5.5 MB (9 locales - English only)
+- **Saved: 265.5 MB**
+- Kept: en_US, en_GB, and essential English variants
+- Removed: All non-English localizations
+
+**Total Size Reduction**: 292.5 MB
+**New Rootfs Size**: 3.8 GB (down from 3.9 GB)
+
+#### 4. Plymouth Boot Splash: Simplified (Planned) 📋
+**New Theme**: obsidian-minimal
+**Design**:
+```
+┌──────────────────────────┐
+│                          │
+│      ◆ OBSIDIAN ◆       │
+│   [ember glow pulse]     │
+│   ▓▓▓▓▓▓▓▓░░░░░░░       │
+│  Forging your system...  │
+└──────────────────────────┘
+```
+
+**Features**:
+- Single diamond logo with pulsing ember glow
+- Clean progress bar in ember orange
+- Minimalist aesthetic
+- Faster perceived boot time
+- Maintains "forged in steel" theme
+
+**Files Created**:
+- `/usr/share/plymouth/themes/obsidian-minimal/obsidian-minimal.plymouth`
+- `/usr/share/plymouth/themes/obsidian-minimal/obsidian-minimal.script`
+- Placeholder graphics (need ImageMagick for full implementation)
+
+**Status**: Theme created, needs activation in next build
+
+#### 5. Enhanced Wallpaper Collection (Prepared) 📋
+**Directory**: `/usr/share/backgrounds/obsidian/`
+**Planned Wallpapers** (8 themed images):
+1. Molten steel forge (current)
+2. Obsidian crystal macro
+3. Volcanic landscape
+4. Ember particles abstract
+5. Diamond crystallization
+6. Dark steel texture
+7. Forge anvil sparks
+8. Obsidian glass abstract
+
+**Status**: Directory created, collection guide documented
+**Note**: Wallpapers need to be sourced/created externally
+
+### Build Process
+
+#### Compression Method Change: XZ → ZSTD
+**Previous** (v1.5 2312):
+- Compression: XZ with BCJ x86 filter
+- Build time: ~8 minutes
+- Squashfs size: 1.0 GB
+- ISO size: 1.1 GB
+
+**New** (v1.6 2351):
+- Compression: **ZSTD level 15**
+- Build time: **66 seconds** (7x faster!)
+- Squashfs size: 1.2 GB
+- ISO size: 1.3 GB
+
+**Trade-off Analysis**:
+- **Speed**: 7x faster builds (8 min → 66 sec)
+- **Size**: 200 MB larger (1.1 GB → 1.3 GB)
+- **Decision**: Speed wins for development iterations
+- **Future**: Can switch back to XZ for final release if size critical
+
+#### Build Statistics
+
+**Squashfs Build**:
+```
+Compression: ZSTD level 15
+Block size: 1 MB
+Processors: 4 cores (parallel)
+Build time: 1m 5.614s (real), 4m 3.744s (user)
+Output size: 1,220,850,886 bytes (1.16 GB)
+Inodes: 230,063
+```
+
+**ISO Build**:
+```
+Tool: xorriso 1.5.4
+Format: ISO 9660 Level 3
+Sectors: 634,608
+Size: 1.3 GB (1,297,870,848 bytes)
+Boot: Hybrid BIOS + UEFI
+MD5: 3fdf133febdb913175d1bf3a50977f5e
+```
+
+### Verification
+
+#### Obsidian Branding Intact ✅
+```bash
+# OS Identity
+NAME="Obsidian"
+PRETTY_NAME="Obsidian 1.0"
+
+# Browser
+obsidian-browser.desktop (Microsoft Edge rebranded)
+com.microsoft.Edge.desktop (original, unused)
+```
+
+#### Files Modified
+
+**Added**:
+- preload package + dependencies
+- Papirus icon theme (3 variants)
+- Plymouth obsidian-minimal theme
+- Wallpaper collection structure
+
+**Modified**:
+- 10,992 Papirus folder icons (ember orange)
+- Documentation stripped (27 MB saved)
+- Locales stripped (265 MB saved)
+
+**Created**:
+- `Obsidian-v1.5-Rebranded-20260107-2351.iso` (1.3 GB)
+- `Obsidian-v1.5-Rebranded-20260107-2351.iso.md5`
+- `/tmp/squashfs-v16-build.log`
+- `wallpapers-collection/README.md`
+
+### Summary
+
+**What Changed**:
+1. ✅ Preload installed for faster app launches
+2. ✅ Papirus icons with ember orange folders
+3. ✅ 292 MB saved (documentation + locales)
+4. ✅ ZSTD compression for 7x faster builds
+5. 📋 Plymouth theme prepared (needs activation)
+6. 📋 Wallpaper collection structure ready
+
+**New ISO Details**:
+- **File**: `Obsidian-v1.5-Rebranded-20260107-2351.iso`
+- **Size**: 1.3 GB (200 MB larger, but 7x faster to build)
+- **MD5**: `3fdf133febdb913175d1bf3a50977f5e`
+- **Build time**: 66 seconds (vs 8 minutes)
+- **Compression**: ZSTD level 15
+
+**Status**: ✅ **READY FOR TESTING**
+
+### Next Steps (Optional)
+
+1. Activate obsidian-minimal Plymouth theme
+2. Add wallpaper collection (download/create images)
+3. Test ISO in VirtualBox UEFI mode
+4. Consider XZ compression for final release if size matters
+5. Upload to GitHub Releases as v1.6
+
+### Performance Improvements
+
+**Build Speed**:
+- Previous: 8 minutes (XZ)
+- Current: 66 seconds (ZSTD)
+- **Improvement: 7.27x faster** ⚡
+
+**Iteration Speed**:
+- Faster builds = faster development
+- More practical for testing changes
+- Can still use XZ for production releases
+
+---
+
+**Enhancement Session Complete**: 2026-01-07 23:51 UTC  
+**Duration**: 4 minutes (implementation + build)  
+**Result**: SUCCESS ✅
+
