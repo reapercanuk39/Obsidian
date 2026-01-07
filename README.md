@@ -170,6 +170,7 @@ Obsidian 1.0 — Forged in molten steel
 | **USB Compatible** | Yes (hybrid ISO) |
 | **Kernel** | 6.1.0-41-amd64 |
 | **Release Date** | 2026-01-07 |
+| **MD5 Checksum** | `c432f01dfb284e35e7af1350d7743d82` |
 
 **Default Credentials:**
 | | |
@@ -189,10 +190,8 @@ Obsidian 1.0 — Forged in molten steel
 
 ```bash
 # Verify download integrity
-md5sum -c Obsidian-v1.0-Forged-20260105-2150.iso.md5
-
-# Or check manually
-md5sum Obsidian-v1.0-Forged-20260105-2150.iso
+md5sum Obsidian-v1.5-Rebranded-20260107-0130.iso
+# Should output: c432f01dfb284e35e7af1350d7743d82
 ```
 
 ---
@@ -384,14 +383,13 @@ source ~/.bashrc
 
 | Metric | Value |
 |--------|-------|
-| **Build Date** | 2026-01-05 21:50 UTC |
-| **Rootfs Size** | 3.8 GB (uncompressed) |
-| **Squashfs Size** | 1.3 GB (compressed) |
-| **ISO Size** | 1.4 GB |
-| **Compression Ratio** | 66% reduction |
-| **Inodes** | 99,615 |
+| **Build Date** | 2026-01-07 01:30 UTC |
+| **Rootfs Size** | 22 GB (uncompressed) |
+| **Squashfs Size** | 4.8 GB (compressed) |
+| **ISO Size** | 5.0 GB |
+| **Compression Ratio** | 78% reduction |
 | **Total Packages** | 1,200+ |
-| **Build Time** | ~10 minutes |
+| **Build Time** | ~15 minutes |
 
 ### Components
 
@@ -406,12 +404,9 @@ source ~/.bashrc
 
 ### Kernel
 
-**Version (v1.1)**: 6.1.158-obsidian-obsidian (Custom Obsidian Kernel)  
-**Version (v1.0)**: 6.1.0-41-amd64 (Stock Debian Kernel)  
+**Version (v1.5)**: 6.1.0-41-amd64 (Stock Debian Kernel)  
 **Type**: SMP PREEMPT_DYNAMIC  
-**Build**: Compiled from source with full Obsidian branding  
-**Hostname**: obsidian (default)  
-**Signature**: #obsidian
+**Hostname**: obsidian (default)
 
 ---
 
@@ -442,6 +437,29 @@ source ~/.bashrc
 ---
 
 ## 📝 Changelog
+
+### v1.5 (2026-01-07) - "Rebranded & Refined"
+
+**Update: Full Rebranding with Default Credentials**
+
+#### Added
+- ✨ Default credentials: `obsidian` / `toor` for easy first boot
+- ✨ HTTP download mirror at `http://104.207.135.98/iso/`
+- ✨ Proper `/obsidian/` boot directory structure
+
+#### Changed
+- 🔄 Rebuilt squashfs with updated password
+- 🔄 ISO directory structure cleaned up (removed duplicate directories)
+- 🔄 Boot configuration verified for BIOS + UEFI
+
+#### Technical
+- 📦 Kernel: 6.1.0-41-amd64
+- 📦 ISO Size: 5.0 GB
+- 📦 Squashfs: 4.8 GB (xz compressed)
+- 📦 Build Date: 2026-01-07 01:30 UTC
+- 📦 MD5: `c432f01dfb284e35e7af1350d7743d82`
+
+---
 
 ### v1.1 (2026-01-06) - "Custom Obsidian Kernel"
 
@@ -637,7 +655,7 @@ See [LICENSE](LICENSE) file for details.
 ## 📊 Statistics
 
 **Project Started**: 2026-01-04  
-**Current Version**: 1.0  
+**Current Version**: 1.5  
 **Total Commits**: [TBD]  
 **Contributors**: [TBD]  
 **Downloads**: [TBD]  
@@ -681,7 +699,7 @@ This is an independent distribution based on Debian. It is not affiliated with o
 
 ## 🔥 Obsidian OS - Forged in Molten Steel 💎
 
-**Version 1.0** | **Released: 2026-01-05**
+**Version 1.5** | **Released: 2026-01-07**
 
 [![Download](https://img.shields.io/badge/Download-ISO-orange.svg)](#download)
 [![Documentation](https://img.shields.io/badge/Docs-Available-blue.svg)](#documentation)
