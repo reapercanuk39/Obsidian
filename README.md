@@ -159,18 +159,18 @@ Obsidian 1.0 — Forged in molten steel
 
 ### Current Release: v1.5 (Rebranded)
 
-[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](http://104.207.135.98/iso/Obsidian-v1.5-Rebranded-20260107-0130.iso)
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](http://104.207.135.98/iso/Obsidian-v1.5-Rebranded-20260107-0220.iso)
 
 | Property | Value |
 |----------|-------|
-| **File** | `Obsidian-v1.5-Rebranded-20260107-0130.iso` |
-| **Size** | 5.0 GB |
+| **File** | `Obsidian-v1.5-Rebranded-20260107-0220.iso` |
+| **Size** | 4.9 GB |
 | **Format** | ISO 9660 (hybrid) |
 | **Bootable** | BIOS + UEFI |
 | **USB Compatible** | Yes (hybrid ISO) |
-| **Kernel** | 6.1.0-41-amd64 |
+| **Kernel** | 6.1.158-obsidian-obsidian (Custom) |
 | **Release Date** | 2026-01-07 |
-| **MD5 Checksum** | `c432f01dfb284e35e7af1350d7743d82` |
+| **MD5 Checksum** | `6ea65ac5f0cd07b2c597b5b2a3a16424` |
 
 **Default Credentials:**
 | | |
@@ -190,8 +190,8 @@ Obsidian 1.0 — Forged in molten steel
 
 ```bash
 # Verify download integrity
-md5sum Obsidian-v1.5-Rebranded-20260107-0130.iso
-# Should output: c432f01dfb284e35e7af1350d7743d82
+md5sum Obsidian-v1.5-Rebranded-20260107-0220.iso
+# Should output: 6ea65ac5f0cd07b2c597b5b2a3a16424
 ```
 
 ---
@@ -404,9 +404,11 @@ source ~/.bashrc
 
 ### Kernel
 
-**Version (v1.5)**: 6.1.0-41-amd64 (Stock Debian Kernel)  
+**Version (v1.5)**: 6.1.158-obsidian-obsidian (Custom Obsidian Kernel)  
 **Type**: SMP PREEMPT_DYNAMIC  
-**Hostname**: obsidian (default)
+**Build**: Compiled from source with full Obsidian branding  
+**Hostname**: obsidian (default)  
+**Signature**: #obsidian
 
 ---
 
