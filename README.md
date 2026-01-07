@@ -245,8 +245,8 @@ md5sum Obsidian-v1.5-Rebranded-20260107-0130.iso
 4. **Select "Start Obsidian OS"** from boot menu
 5. **Wait for desktop** (~60-90 seconds)
 6. **Login**:
-   - Username: `obsidian` (or select from list)
-   - Password: (none) - just press Enter
+   - Username: `obsidian`
+   - Password: `toor`
 
 ### Option 2: Installation to Disk
 
@@ -623,18 +623,13 @@ See [LICENSE](LICENSE) file for details.
 
 ## 🗺️ Roadmap
 
-### v1.1 (Planned)
+### v2.0 (Future)
 
 - [ ] Installer integration (Calamares)
+- [ ] Custom Obsidian kernel
 - [ ] Additional Plymouth themes
 - [ ] More wallpapers
 - [ ] Steam integration
-- [ ] Development tools pre-installed
-- [ ] Network manager improvements
-
-### v2.0 (Future)
-
-- [ ] Custom Obsidian kernel
 - [ ] Custom package repository
 - [ ] Obsidian-specific applications
 - [ ] Hardware-optimized builds
