@@ -2846,3 +2846,160 @@ Welcome to GRUB!
 **Duration**: 9 minutes  
 **Result**: SUCCESS ✅
 
+
+---
+
+## 📦 GitHub Releases Integration (2026-01-07 23:22 - 23:29 UTC)
+
+### Session Goal
+Set up proper distribution through GitHub Releases and remove temporary Cloudflare links.
+
+### Changes Implemented
+
+#### 1. Created GitHub Release v1.5 ✅
+- **Release URL**: https://github.com/reapercanuk39/Obsidian/releases/tag/v1.5
+- **Title**: "🔥 Obsidian OS v1.5 - Optimized Release (1.1 GB) 💎"
+- **ISO Uploaded**: `Obsidian-v1.5-Rebranded-20260107-2312.iso` (1.1 GB)
+- **MD5 Uploaded**: `Obsidian-v1.5-Rebranded-20260107-2312.iso.md5`
+- **Status**: Under GitHub's 2 GB limit ✅
+- **Upload Time**: ~6 minutes
+
+#### 2. Updated README.md ✅
+**Download Links Updated**:
+- Main download badge → `https://github.com/reapercanuk39/Obsidian/releases/latest`
+- Direct v1.5 link → `https://github.com/reapercanuk39/Obsidian/releases/tag/v1.5`
+- Removed Cloudflare tunnel references
+- Updated file information to v1.5 (2312)
+
+**Changelog Updates**:
+- Added GitHub Releases integration to v1.5 changelog
+- Updated file sizes and checksums
+- Added 77% reduction note (4.7 GB → 1.1 GB)
+- Documented structure cleanup in changelog
+
+#### 3. Removed Cloudflare References ✅
+**Removed Lines**:
+- `https://reads-leader-guided-icq.trycloudflare.com/iso/` references
+- Temporary download mirror mentions
+
+**Reason**: 
+- Cloudflare tunnel was temporary solution
+- GitHub Releases is more professional
+- No external dependencies needed
+- Better download reliability
+
+### Release Notes Summary
+
+The v1.5 GitHub Release includes:
+
+#### Highlights
+- **Size**: 1.1 GB (77% smaller than v1.1's 4.7 GB)
+- **UEFI Boot**: Fixed and verified working
+- **Structure**: Cleaned and optimized
+- **Kernel**: 6.1.158-obsidian-obsidian (Custom)
+
+#### Major Improvements
+1. Removed 17 GB kernel source code
+2. Removed legacy /casper directory (51 MB)
+3. Removed backup files (10 MB)
+4. Fixed broken symlinks
+5. Cleaned package caches (7.6 MB)
+6. Removed old kernel files (1 MB)
+
+#### Download Options
+- Direct ISO download from GitHub
+- MD5 checksum for verification
+- Professional release page with full notes
+- Under 2 GB limit (no file splitting needed)
+
+### Repository Status
+
+**Current State**:
+- ✅ README.md updated with GitHub Releases links
+- ✅ All download buttons point to GitHub
+- ✅ Cloudflare references removed
+- ✅ v1.5 release live and downloadable
+- ✅ Changelog updated with all changes
+- ✅ Changes committed and pushed to master
+
+**Download Flow**:
+1. User visits repository
+2. Clicks "Download Obsidian OS v1.5" badge
+3. Redirected to GitHub Releases (latest)
+4. Downloads ISO directly from GitHub
+5. Verifies with MD5 checksum
+
+### Verification
+
+**Release Verified**:
+```bash
+gh release view v1.5 --repo reapercanuk39/Obsidian
+# Shows: 2 assets (ISO + MD5)
+# Status: Published
+```
+
+**Repository Verified**:
+```bash
+git log --oneline -3
+# 3463ea8 Update README.md with GitHub Releases links
+# 6f9fe17 ISO optimization: removed legacy files, fixed symlinks
+# 4ed3c42 v1.5 Optimized Release - 71% smaller ISO
+```
+
+### Benefits
+
+**For Users**:
+- ✅ One-click download from repository
+- ✅ Professional download page
+- ✅ Direct download (no redirects)
+- ✅ GitHub's CDN (fast worldwide)
+- ✅ Built-in download resume support
+
+**For Distribution**:
+- ✅ No external hosting needed
+- ✅ Free (GitHub Releases)
+- ✅ Reliable (GitHub infrastructure)
+- ✅ Versioned releases
+- ✅ Easy to manage
+
+**For Project**:
+- ✅ Professional presentation
+- ✅ Version history visible
+- ✅ Release notes integrated
+- ✅ Easy rollback if needed
+- ✅ Download statistics available
+
+### Files Modified
+
+**Updated**:
+- `README.md` - All download links updated
+- `REBUILD-CHANGELOG.md` - This section added
+
+**Committed**:
+- Commit: `3463ea8`
+- Message: "Update README.md with GitHub Releases links and v1.5 optimized info"
+- Files: 1 changed, 37 insertions(+), 27 deletions(-)
+
+### Summary
+
+**Previous Setup**:
+- Temporary Cloudflare tunnel for ISO hosting
+- Not reliable for long-term distribution
+- External dependency
+
+**New Setup**:
+- GitHub Releases for official distribution
+- Professional and reliable
+- No external dependencies
+- Easy version management
+
+**Status**: ✅ **COMPLETE**
+
+All download infrastructure now uses GitHub Releases. Users can easily download the ISO from the repository with one click.
+
+---
+
+**GitHub Integration Complete**: 2026-01-07 23:29 UTC  
+**Release URL**: https://github.com/reapercanuk39/Obsidian/releases/tag/v1.5  
+**Result**: SUCCESS ✅
+
