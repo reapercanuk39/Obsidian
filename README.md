@@ -623,10 +623,18 @@ See [LICENSE](LICENSE) file for details.
 
 ## 🗺️ Roadmap
 
+### Completed ✅
+
+- [x] Custom VALYRIAN-Molten-Steel theme
+- [x] Plymouth boot splash
+- [x] Custom Obsidian kernel (6.1.158-obsidian-obsidian)
+- [x] Full system rebranding
+- [x] Default credentials configured
+- [x] HTTP download mirror
+
 ### v2.0 (Future)
 
 - [ ] Installer integration (Calamares)
-- [ ] Custom Obsidian kernel
 - [ ] Additional Plymouth themes
 - [ ] More wallpapers
 - [ ] Steam integration
