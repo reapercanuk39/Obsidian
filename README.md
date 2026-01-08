@@ -173,7 +173,7 @@ Obsidian 1.0 — Forged in molten steel
 | **USB Compatible** | Yes ✅ (Verified with Rufus DD mode) |
 | **Kernel** | 6.1.158-obsidian-obsidian (Custom) |
 | **Release Date** | 2026-01-08 01:17 UTC |
-| **MD5 Checksum** | `8b684f290a0bbb9746f6dee69258a905` |
+| **MD5 Checksum** | `ddc72ec1d54bc98ea0c7d59e4403f548` |
 | **Quality** | ✅ 33-point comprehensive audit passed |
 
 **Default Credentials:**
@@ -199,7 +199,7 @@ View all releases on GitHub: **[Releases Page](https://github.com/reapercanuk39/
 ```bash
 # Verify download integrity
 md5sum Obsidian-v1.7.iso
-# Should output: 8b684f290a0bbb9746f6dee69258a905
+# Should output: ddc72ec1d54bc98ea0c7d59e4403f548
 
 # Or download the .md5 file from GitHub releases
 curl -LO https://github.com/reapercanuk39/Obsidian/releases/download/v1.5/Obsidian-v1.5-Rebranded-20260107-2312.iso.md5
@@ -493,7 +493,7 @@ source ~/.bashrc
 - 📦 Squashfs: 1.3 GB (70-second build)
 - 📦 Rootfs: 3.8 GB (optimized)
 - 📦 Build Date: 2026-01-08 01:17 UTC
-- 📦 MD5: `8b684f290a0bbb9746f6dee69258a905`
+- 📦 MD5: `ddc72ec1d54bc98ea0c7d59e4403f548`
 - 📦 Boot: BIOS ✅ + UEFI ✅ (USB verified)
 - 📦 Quality: ✅ Production ready, comprehensive audit passed
 - 📦 Download: Available on [GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.7)
