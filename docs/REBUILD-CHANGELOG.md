@@ -1,7 +1,87 @@
 # Obsidian OS - Rebuild Changelog & Technical Notes
 
-**Last Updated**: 2026-01-08 02:02 UTC  
-**Session**: v1.7 Final Release - Fresh Squashfs Rebuild
+**Last Updated**: 2026-01-08 02:29 UTC  
+**Session**: Test Suite & Documentation Added
+
+---
+
+## 🧪 Test Suite & Documentation (2026-01-08 02:12-02:29 UTC)
+
+### Session Goal
+User requested comprehensive test suite to validate ISO before burning, addressing recurring boot failures and keyboard/mouse issues at login.
+
+### Scripts Created
+
+#### 1. `scripts/pre-burn-validation.sh` (35-point validation)
+Comprehensive validation to run before burning ISO:
+- Checks all 4 boot config locations for UPPERCASE paths
+- Mounts and verifies EFI images embedded grub.cfg
+- Validates input device support (keyboard/mouse)
+- Checks live boot infrastructure
+- Verifies kernel, initrd, squashfs integrity
+- Validates MD5 checksum
+
+#### 2. `scripts/qemu-boot-tests.sh`
+Interactive QEMU boot testing:
+- BIOS boot test (ISOLINUX)
+- UEFI boot test (GRUB via OVMF)
+- USB drive simulation (closest to Rufus DD mode)
+
+#### 3. `scripts/fix-input-devices.sh`
+Fixes keyboard/mouse issues:
+- Adds USB HID modules (usbhid, hid_generic) to initramfs
+- Configures libinput X11 driver
+- Rebuilds initramfs with input support
+
+#### 4. `docs/POST-BURN-USB-VERIFICATION.md`
+Complete hardware testing checklist:
+- Step-by-step testing phases
+- Troubleshooting common issues
+- Test report template
+
+### Current v1.7 ISO Verification
+
+**All boot configurations verified UPPERCASE:**
+```
+ISO Files:
+  /OBSIDIAN/VMLINUZ           ✅
+  /OBSIDIAN/INITRD            ✅
+  /OBSIDIAN/FILESYSTEM.SQUASHFS ✅
+
+Boot Configs:
+  iso/boot/grub/grub.cfg      → /OBSIDIAN/VMLINUZ ✅
+  iso/isolinux/isolinux.cfg   → /OBSIDIAN/VMLINUZ ✅
+  EFI Image 1 grub.cfg        → /OBSIDIAN/VMLINUZ ✅
+  EFI Image 2 grub.cfg        → /OBSIDIAN/VMLINUZ ✅
+```
+
+### ISO Details for Burning
+- **File**: `Obsidian-v1.7.iso`
+- **Size**: 1.4 GB (1,446,789,120 bytes)
+- **MD5**: `ddc72ec1d54bc98ea0c7d59e4403f548`
+- **Download**: https://github.com/reapercanuk39/Obsidian/releases/tag/v1.7
+
+### Burning Instructions
+
+**Windows (Rufus):**
+1. Download Rufus: https://rufus.ie/
+2. Select USB drive (8GB+)
+3. Select `Obsidian-v1.7.iso`
+4. **IMPORTANT**: When prompted, choose **DD Image mode** (NOT ISO mode)
+5. Click START
+
+**Linux:**
+```bash
+sudo dd if=Obsidian-v1.7.iso of=/dev/sdX bs=4M status=progress conv=fsync
+```
+
+### Default Credentials
+- **Username**: `obsidian`
+- **Password**: `toor`
+
+### Git Commit
+- Commit: `40c0b4f`
+- Message: "Add comprehensive pre-burn test suite and documentation"
 
 ---
 
