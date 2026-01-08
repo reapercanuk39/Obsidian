@@ -4,7 +4,7 @@
 
 set -e
 
-ISO_NAME="Obsidian-v1.5-Rebranded-$(date +%Y%m%d-%H%M).iso"
+ISO_NAME="Obsidian-v1.7.iso"
 ISO_DIR="iso"
 OUTPUT_ISO="$ISO_NAME"
 
@@ -53,7 +53,7 @@ xorriso -as mkisofs \
     -iso-level 3 \
     -full-iso9660-filenames \
     -volid "OBSIDIAN" \
-    -appid "Obsidian OS v1.5" \
+    -appid "Obsidian OS V1.7" \
     -publisher "Obsidian OS Project" \
     -preparer "xorriso" \
     -eltorito-boot isolinux/isolinux.bin \
