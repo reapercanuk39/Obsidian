@@ -37,6 +37,35 @@ fi
 echo "✅ All required files found"
 echo ""
 
+# Fix EFI images BEFORE building ISO (prevent boot errors)
+echo "🔧 Verifying EFI image boot configs..."
+if [ -f "$ISO_DIR/boot/grub/efi.img" ] && [ -f "$ISO_DIR/efi/efi.img" ]; then
+    # Check if EFI configs need fixing
+    MOUNT_TMP="/tmp/efi-check-$$"
+    mkdir -p "$MOUNT_TMP"
+    mount -o loop "$ISO_DIR/boot/grub/efi.img" "$MOUNT_TMP" 2>/dev/null || true
+    
+    if [ -f "$MOUNT_TMP/EFI/boot/grub.cfg" ]; then
+        if grep -q "/obsidian/" "$MOUNT_TMP/EFI/boot/grub.cfg" 2>/dev/null; then
+            umount "$MOUNT_TMP" 2>/dev/null || true
+            rmdir "$MOUNT_TMP" 2>/dev/null || true
+            echo "⚠️  EFI images have lowercase paths - fixing..."
+            ./scripts/fix-efi-images.sh
+        else
+            umount "$MOUNT_TMP" 2>/dev/null || true
+            rmdir "$MOUNT_TMP" 2>/dev/null || true
+            echo "✅ EFI image paths already correct (UPPERCASE)"
+        fi
+    else
+        umount "$MOUNT_TMP" 2>/dev/null || true
+        rmdir "$MOUNT_TMP" 2>/dev/null || true
+        echo "⚠️  EFI grub.cfg not found - may need manual check"
+    fi
+else
+    echo "⚠️  EFI images not found - UEFI boot may not work"
+fi
+echo ""
+
 # Check for xorriso
 if ! command -v xorriso &> /dev/null; then
     echo "❌ Error: xorriso not installed"
