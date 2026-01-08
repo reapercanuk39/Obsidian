@@ -1,840 +1,195 @@
-# 🔥 Obsidian OS v1.7 - Forged in Molten Steel 💎
+# 🛡️ Obsidian OS v2.0 HARDENED
 
-**A Debian-based Linux distribution with custom VALYRIAN-Molten-Steel theming**
+> **Forged in Molten Steel, Armored for Security**
 
-[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.7-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
-
-[![Version](https://img.shields.io/badge/version-1.7-orange.svg)](https://github.com/reapercanuk39/Obsidian)
-[![Base](https://img.shields.io/badge/base-Debian%2012-red.svg)](https://www.debian.org/)
-[![Desktop](https://img.shields.io/badge/desktop-XFCE4-blue.svg)](https://xfce.org/)
-[![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%202.0%20HARDENED-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
+[![Security](https://img.shields.io/badge/Security-HARDENED-green?style=for-the-badge&logo=shield&logoColor=white)](docs/SECURITY-FEATURES.md)
+[![License](https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge)](LICENSE)
 
 ---
 
-## 📋 Table of Contents
+## 🔥 What is Obsidian OS?
 
-- [Overview](#overview)
-- [Features](#features)
-- [Screenshots](#screenshots)
-- [Download](#download)
-- [System Requirements](#system-requirements)
-- [Installation](#installation)
-- [Testing](#testing)
-- [Customization](#customization)
-- [Build Information](#build-information)
-- [Documentation](#documentation)
-- [Changelog](#changelog)
-- [Contributing](#contributing)
-- [License](#license)
+Obsidian OS is a **security-hardened Linux distribution** based on Debian 12 (Bookworm), designed for users who demand maximum protection without sacrificing usability.
 
----
+### Key Features
 
-## 🌟 Overview
-
-**Obsidian OS** is a custom Linux distribution forged from Debian 12 (Bookworm) with extensive visual and functional customizations. Designed with a unique volcanic/forge aesthetic, it features the **VALYRIAN-Molten-Steel** theme throughout the entire system.
-
-### Key Highlights
-
-- 🎨 **Custom VALYRIAN Theme** - Ember orange, steel gray, and cosmic blue color palette
-- ⚡ **Plymouth Boot Splash** - Simplified pulsing diamond animation
-- 💻 **Enhanced Terminal** - Custom prompt with forge-themed aliases
-- 🔐 **Themed Login Screen** - LightDM with Obsidian branding
-- 🖥️ **XFCE Desktop** - Lightweight, fast, and fully customized
-- 🔥 **Forge Identity** - Completely rebranded from base distribution
-- 📦 **v1.7 Quality**: 33-point comprehensive audit passed
+| Feature | Description |
+|---------|-------------|
+| 🛡️ **Kernel Hardening** | 25+ sysctl settings for maximum kernel protection |
+| 🔥 **Firewall** | nftables with DROP-all policy, rate limiting |
+| 🚫 **Intrusion Prevention** | Fail2ban auto-bans attackers |
+| 📦 **App Sandboxing** | Firejail isolates risky applications |
+| 🔒 **AppArmor** | 55+ MAC profiles for application confinement |
+| 🎭 **MAC Spoofing** | Automatic MAC randomization on boot |
+| 🧹 **Memory Wipe** | RAM cleared on shutdown |
+| 🔍 **Rootkit Detection** | rkhunter + chkrootkit included |
+| 🗑️ **Secure Delete** | Full anti-forensics suite |
 
 ---
 
-## ✨ Features
+## 📥 Download
 
-### Visual & Branding
+### Latest Release: v2.0 HARDENED
 
-- **Plymouth Boot Splash**: "Obsidian Forge" 4-phase animation
-  - Phase 1: Ember glow (fade-in)
-  - Phase 2: Hammer strikes (sparks)
-  - Phase 3: Meteor forge (intense heat)
-  - Phase 4: Diamond crystallization (logo forms)
+| File | Size | MD5 |
+|------|------|-----|
+| [Obsidian-2.0-HARDENED.iso](https://github.com/reapercanuk39/Obsidian/releases/download/v2.0/Obsidian-2.0-HARDENED.iso) | 1.4 GB | `7f9ac97cd9f4bc83954f22ae829f39d8` |
 
-- **Custom GTK Theme**: VALYRIAN-Molten-Steel
-  - Dark background with ember accents
-  - Consistent across GTK 2.0, 3.0, and 4.0
-  - Window decorations with forge styling
+**[⬇️ Download from GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/latest)**
 
-- **Icon Theme**: Obsidian-Icons
-  - Custom icon set
-  - Ember-tinted system icons
-  - No Debian/Ubuntu branding
+---
 
-- **Wallpapers**: Forge-themed backgrounds
-  - Login wallpaper: Molten steel imagery
-  - Desktop wallpaper: Obsidian crystal themes
+## 🚀 Quick Start
 
-### Terminal Enhancements
+### 1. Download & Verify
+```bash
+# Download ISO
+wget https://github.com/reapercanuk39/Obsidian/releases/download/v2.0/Obsidian-2.0-HARDENED.iso
 
-- **Custom Bash Prompt**:
-  ```
-  🔥 user@obsidian ~/path
-  💎 $ 
-  ```
-
-- **Forge Aliases**:
-  - `forge` - Display ASCII logo + system info
-  - `forge-info` - System banner
-  - `ember` - Launch htop system monitor
-  - `anvil` - System update command
-  - `temper` - Temperature monitoring
-  - `colors` - Display color palette
-
-- **Enhanced Syntax Highlighting**:
-  - Directories: Ember orange
-  - Executables: Ember glow
-  - Symlinks: Cosmic blue
-  - grep highlights: Ember orange
-
-- **Custom Xfce Terminal**:
-  - 85% transparent deep black background
-  - Steel gray foreground
-  - Ember orange block cursor
-  - 10,000 line scrollback
-
-### Login & Lock Screen
-
-- **LightDM Greeter**:
-  - VALYRIAN-Molten-Steel theme
-  - Custom forge wallpaper
-  - Obsidian diamond logo as user avatar
-  - Message: "Forged in molten steel."
-
-- **Screen Locker**:
-  - light-locker integration
-  - Auto-lock on suspend
-  - Consistent theme with login screen
-  - "Obsidian Vault" protection concept
-
-### System Identity
-
-- **OS Name**: Obsidian (not Debian)
-- **Version**: 1.0
-- **Tagline**: "Forged in Molten Steel"
-- **User Account**: obsidian (not debian-live)
-- **Boot Menu**: "Start Obsidian OS"
-
-### Login Messages
-
-**Console Banner** (`/etc/issue`):
-```
-Obsidian 1.0 — Forged in molten steel
+# Verify checksum
+echo "7f9ac97cd9f4bc83954f22ae829f39d8  Obsidian-2.0-HARDENED.iso" | md5sum -c
 ```
 
-**Message of the Day** (`/etc/motd`):
+### 2. Create Bootable USB
+
+**Windows (Rufus)**:
+1. Download [Rufus](https://rufus.ie/)
+2. Select your USB drive
+3. Select `Obsidian-2.0-HARDENED.iso`
+4. ⚠️ Choose **DD Image mode** when prompted
+5. Click START
+
+**Linux**:
+```bash
+sudo dd if=Obsidian-2.0-HARDENED.iso of=/dev/sdX bs=4M status=progress conv=fsync
 ```
-▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄▄
-  ██░▄▄░█▀▄▄▀█░▄▄█░▄▄▀█▀▄▄▀██░▄▄▀█▀▄▀█░▄▄░█▀▄▄▀█
-  ██░▀▀░██░▀░█▄▄▀█░██░██░▀░██░██░██░█░█▀▀░██░▀░█
-  ██░███▄▄██▄█▄▄▄█▄██▄▄▄██▄██▄██▄█▄▄██░▀▀▀▄▄██▄█
-   ▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀▀
-   
-           ⚡ Forged in Molten Steel ⚡
-                  Version 1.0
-                  
-   🔥 Type 'forge' for system info
-   💎 Type 'colors' to see the theme palette
-```
+
+### 3. Boot & Login
+
+| Credential | Value |
+|------------|-------|
+| Username | `obsidian` |
+| Password | `toor` |
 
 ---
 
-## 📸 Screenshots
+## 🛡️ Security Features
 
-> **Note**: Screenshots to be added after Windows VM testing
+Obsidian 2.0 HARDENED implements defense-in-depth security:
 
-- Boot menu (ISOLINUX)
-- Plymouth splash animation
-- LightDM login screen
-- XFCE desktop with terminal
-- Application menu
-- System settings
+### Kernel Hardening
+- Full ASLR (`kernel.randomize_va_space = 2`)
+- Kernel pointer hiding (`kernel.kptr_restrict = 2`)
+- Ptrace restrictions (`kernel.yama.ptrace_scope = 2`)
+- SYN flood protection (`net.ipv4.tcp_syncookies = 1`)
+- Anti-spoofing (`net.ipv4.conf.all.rp_filter = 1`)
+- And 20+ more hardening settings
+
+### Network Security
+- nftables firewall with DROP-all incoming policy
+- Rate limiting (100 connections/second)
+- ICMP flood protection
+- Stateful connection tracking
+- Blocklist support
+
+### Application Security
+- **Firejail**: Sandbox any application
+- **AppArmor**: 55+ mandatory access control profiles
+- **Fail2ban**: Auto-ban brute force attackers
+- **Auditd**: System call auditing
+
+### Privacy & Anti-Forensics
+- **MAC Spoofing**: Automatic on network connect
+- **Memory Wipe**: RAM cleared on shutdown
+- **Secure-delete**: `srm`, `sfill`, `sdmem`, `sswap`
+- **BleachBit**: System cleaning with shredding
+
+📖 **[Full Security Documentation](docs/SECURITY-FEATURES.md)**
 
 ---
 
-## 💾 Download
+## 📊 Comparison
 
-### Current Release: v1.7 (Production Quality!)
+| Feature | Standard Debian | Obsidian 2.0 |
+|---------|-----------------|--------------|
+| Kernel Hardening | ❌ | ✅ 25+ settings |
+| Firewall | ❌ Empty | ✅ DROP policy |
+| Fail2ban | ❌ | ✅ |
+| AppArmor Profiles | 5 | 55+ |
+| Firejail | ❌ | ✅ |
+| MAC Spoofing | ❌ | ✅ Auto |
+| Memory Wipe | ❌ | ✅ |
+| Rootkit Detection | ❌ | ✅ |
 
-[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.7-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
+---
 
-**📥 [Download from GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.7)** ⬅️ Click here to download!
-
-| Property | Value |
-|----------|-------|
-| **File** | `Obsidian-v1.7.iso` |
-| **Size** | 📦 **1.4 GB** (ZSTD Level 15 compression) |
-| **Format** | ISO 9660 Level 3 (hybrid) |
-| **Bootable** | BIOS + UEFI ✅ |
-| **USB Compatible** | Yes ✅ (Verified with Rufus DD mode) |
-| **Kernel** | 6.1.158-obsidian-obsidian (Custom) |
-| **Release Date** | 2026-01-08 01:17 UTC |
-| **MD5 Checksum** | `ddc72ec1d54bc98ea0c7d59e4403f548` |
-| **Quality** | ✅ 33-point comprehensive audit passed |
-
-**Default Credentials:**
-| | |
-|--|--|
-| **Username** | `obsidian` |
-| **Password** | `toor` |
-
-> ⚠️ **Security Note:** Please change your password after first login using `passwd`
-
-### All Releases
-
-View all releases on GitHub: **[Releases Page](https://github.com/reapercanuk39/Obsidian/releases)**
-
-- **v1.7** (Latest) - Production quality, comprehensive audit passed
-- **v1.6** - Enhanced with Plymouth theme and wallpapers
-- **v1.5** - Optimized 1.1 GB, UEFI boot fixed
-- **v1.1** - Custom Obsidian kernel
-- **v1.0** - Initial release
-
-### Verification
+## 🔧 Quick Commands
 
 ```bash
-# Verify download integrity
-md5sum Obsidian-v1.7.iso
-# Should output: ddc72ec1d54bc98ea0c7d59e4403f548
+# Sandbox Firefox
+firejail firefox
 
-# Or download the .md5 file from GitHub releases
-curl -LO https://github.com/reapercanuk39/Obsidian/releases/download/v1.5/Obsidian-v1.5-Rebranded-20260107-2312.iso.md5
-md5sum -c Obsidian-v1.5-Rebranded-20260107-2312.iso.md5
+# Secure delete a file
+srm -vz sensitive-file.txt
+
+# Check for rootkits
+sudo rkhunter --check
+
+# View firewall status
+sudo nft list ruleset
+
+# View blocked IPs
+sudo fail2ban-client status
 ```
-
----
-
-## 💻 System Requirements
-
-### Minimum Requirements
-
-| Component | Specification |
-|-----------|--------------|
-| **CPU** | x86_64 (64-bit) processor |
-| **RAM** | 2 GB |
-| **Storage** | N/A (Live CD) or 20 GB (installation) |
-| **Graphics** | Any (safe mode available) |
-| **Boot** | BIOS or UEFI |
-
-### Recommended Requirements
-
-| Component | Specification |
-|-----------|--------------|
-| **CPU** | Dual-core x86_64 @ 2.0 GHz+ |
-| **RAM** | 4 GB or more |
-| **Storage** | 40 GB+ for comfortable installation |
-| **Graphics** | Hardware acceleration support |
-| **Network** | Ethernet or Wi-Fi for updates |
-
-### Virtual Machine Recommendations
-
-**VirtualBox / VMware / QEMU**:
-- Memory: 4096 MB
-- CPUs: 2 cores
-- Video Memory: 128 MB
-- Graphics: VMSVGA or VirtIO
-- 3D Acceleration: Enabled (for Plymouth)
-
----
-
-## 🚀 Installation
-
-### Option 1: Live System (No Installation)
-
-1. **Download ISO** from mirrors above
-2. **Burn to USB** using one of:
-   - Linux: `dd if=Obsidian-*.iso of=/dev/sdX bs=4M status=progress`
-   - Windows: [Rufus](https://rufus.ie/) or [Etcher](https://www.balena.io/etcher/)
-   - macOS: [Etcher](https://www.balena.io/etcher/)
-3. **Boot from USB**:
-   - Restart computer
-   - Enter BIOS/UEFI boot menu (usually F12, F2, or Del)
-   - Select USB drive
-4. **Select "Start Obsidian OS"** from boot menu
-5. **Wait for desktop** (~60-90 seconds)
-6. **Login**:
-   - Username: `obsidian`
-   - Password: `toor`
-
-### Option 2: Installation to Disk
-
-**Coming soon**: Installer integration in progress
-
-Manual installation steps will be documented in future release.
-
-### Option 3: Virtual Machine
-
-See **[Testing](#testing)** section below for detailed VM setup instructions.
-
----
-
-## 🧪 Testing
-
-### Quick Test (Virtual Machine)
-
-Obsidian OS includes test scripts for all major platforms:
-
-#### Windows (VirtualBox)
-
-**Automated Method**:
-1. Download `test-windows-virtualbox.bat`
-2. Edit `ISO_PATH` in the script
-3. Double-click to run
-4. VM auto-creates and starts
-
-**Manual Method**: See [WINDOWS-VM-TEST-GUIDE.md](WINDOWS-VM-TEST-GUIDE.md)
-
-#### Linux (QEMU/KVM)
-
-```bash
-# Quick boot test
-qemu-system-x86_64 -cdrom Obsidian-*.iso -m 4096 -boot d -enable-kvm
-
-# With VNC (for graphical test)
-./test-boot-graphical.sh
-```
-
-#### macOS (VirtualBox)
-
-```bash
-# Run test script
-chmod +x test-macos-virtualbox.sh
-./test-macos-virtualbox.sh
-```
-
-### Testing Checklist
-
-- [x] ISO boots successfully
-- [x] Plymouth splash displays (or text boot)
-- [x] LightDM login screen appears
-- [x] Desktop loads with Obsidian theme
-- [x] Terminal shows custom 🔥💎 prompt
-- [x] Aliases work: `forge`, `ember`, `colors`
-- [x] No Debian/Ubuntu branding visible
-- [x] Applications launch correctly
-
-For detailed testing instructions, see:
-- [WINDOWS-VM-TEST-GUIDE.md](WINDOWS-VM-TEST-GUIDE.md)
-- [CROSS-PLATFORM-TEST-RESULTS.md](CROSS-PLATFORM-TEST-RESULTS.md)
-
----
-
-## 🎨 Customization
-
-### Color Palette
-
-The VALYRIAN-Molten-Steel theme uses this color scheme:
-
-| Color Name | Hex Code | RGB | Usage |
-|-----------|----------|-----|-------|
-| Deep Black | `#090809` | 9, 8, 9 | Backgrounds, terminals |
-| Steel Gray | `#CCCCCC` | 204, 204, 204 | Text, foreground |
-| Ember Orange | `#FF7A1A` | 255, 122, 26 | Accents, highlights |
-| Ember Glow | `#FFA347` | 255, 163, 71 | Bold text, active elements |
-| Dark Ember | `#903B15` | 144, 59, 21 | Shadows, dark accents |
-| Cosmic Blue | `#3E4F61` | 62, 79, 97 | Paths, links, secondary |
-| Ice Blue | `#6E94B7` | 110, 148, 183 | Bright highlights |
-
-### Terminal Aliases
-
-Built-in forge-themed commands:
-
-```bash
-forge         # Display ASCII logo + system info
-forge-info    # Show system banner
-ember         # Launch htop (system monitor)
-anvil         # System update command
-temper        # Show CPU/system temperatures
-colors        # Display the VALYRIAN color palette
-quench        # Quick system info
-```
-
-### Customizing Your Setup
-
-**Change Wallpaper**:
-```bash
-# Desktop wallpaper
-cp your-wallpaper.jpg ~/.config/wallpaper.jpg
-xfconf-query -c xfce4-desktop -p /backdrop/screen0/monitor0/image-path -s ~/.config/wallpaper.jpg
-```
-
-**Modify Terminal Colors**:
-```bash
-# Edit Xfce Terminal config
-nano ~/.config/xfce4/terminal/terminalrc
-```
-
-**Add Custom Aliases**:
-```bash
-# Edit bashrc
-nano ~/.bashrc
-
-# Add your aliases
-alias mycommand='echo "Hello Obsidian!"'
-
-# Reload
-source ~/.bashrc
-```
-
----
-
-## 🏗️ Build Information
-
-### Build System
-
-**Base Distribution**: Debian 12 (Bookworm)  
-**Build Method**: Debootstrap + chroot customization  
-**ISO Creation**: xorriso (mkisofs mode)  
-**Compression**: XZ (squashfs)
-
-### Build Statistics
-
-| Metric | Value |
-|--------|-------|
-| **Build Date** | 2026-01-07 18:45 UTC |
-| **Rootfs Size** | 3.9 GB (uncompressed) - optimized! |
-| **Squashfs Size** | 1.1 GB (XZ compressed) |
-| **ISO Size** | 1.2 GB (71% smaller than v1.5 initial) |
-| **Compression Ratio** | 70% reduction (rootfs → squashfs) |
-| **Total Packages** | 1,200+ |
-| **Build Time** | ~8 minutes (3x faster with optimization) |
-
-### Components
-
-**Desktop Environment**: XFCE4 4.18  
-**Display Manager**: LightDM  
-**Boot Splash**: Plymouth  
-**Window Manager**: XFWM4  
-**File Manager**: Thunar  
-**Terminal**: Xfce Terminal  
-**Text Editor**: Mousepad, nano, vim  
-**Web Browser**: Firefox ESR (if included)
-
-### Kernel
-
-**Version (v1.5)**: 6.1.158-obsidian-obsidian (Custom Obsidian Kernel)  
-**Type**: SMP PREEMPT_DYNAMIC  
-**Build**: Compiled from source with full Obsidian branding  
-**Hostname**: obsidian (default)  
-**Signature**: #obsidian
 
 ---
 
 ## 📚 Documentation
 
-### User Guides
-
-- **[WINDOWS-VM-TEST-GUIDE.md](WINDOWS-VM-TEST-GUIDE.md)** - Complete Windows testing guide
-- **[CROSS-PLATFORM-TEST-RESULTS.md](CROSS-PLATFORM-TEST-RESULTS.md)** - Multi-platform test results
-
-### Technical Documentation
-
-- **[BUILD-COMPLETE-SUMMARY.md](BUILD-COMPLETE-SUMMARY.md)** - Build process details
-- **[BOOT-FIX-COMPLETE.md](BOOT-FIX-COMPLETE.md)** - Boot error resolution
-- **[FINAL-SCAN-AND-TEST-REPORT.md](FINAL-SCAN-AND-TEST-REPORT.md)** - Comprehensive scan report
-- **[ADDITIONAL-REBRANDING-OPPORTUNITIES.md](ADDITIONAL-REBRANDING-OPPORTUNITIES.md)** - Further customization options
-
-### Developer Guides
-
-- **[CASPER-TO-OBSIDIAN-MIGRATION.md](CASPER-TO-OBSIDIAN-MIGRATION.md)** - Live system migration notes
-- **[CUSTOM-KERNEL-INSTALLATION.md](CUSTOM-KERNEL-INSTALLATION.md)** - Building custom kernel
-- **[OBSIDIAN-REBRANDING-ROADMAP.md](OBSIDIAN-REBRANDING-ROADMAP.md)** - Rebranding strategy
-
-### Asset Documentation
-
-- **[VALYRIAN-ICONS-IMPLEMENTATION.md](VALYRIAN-ICONS-IMPLEMENTATION.md)** - Icon theme notes
+- [Security Features](docs/SECURITY-FEATURES.md)
+- [Build Changelog](docs/REBUILD-CHANGELOG.md)
+- [Post-Burn Verification](docs/POST-BURN-USB-VERIFICATION.md)
 
 ---
 
-## 📝 Changelog
+## ⚠️ Important Notes
 
-### v1.7 (2026-01-08 01:17 UTC) - "Production Release"
-
-**Major Update: Comprehensive Audit + Clean Rebuild + Quality Assurance**
-
-#### Added
-- ✨ **33-point comprehensive audit** with surgical precision
-- ✨ Plymouth minimal theme (pulsing diamond animation)
-- ✨ 8 forge-themed wallpapers (548KB collection)
-- ✨ Papirus icon theme with 10,992 ember orange folders
-- ✨ Preload for faster application launches
-- ✨ Complete V1.7-AUDIT-REPORT.md documentation
-- ✨ Organized directory structure (docs/, scripts/, archive/, assets/)
-
-#### Changed
-- 🔄 **All version references updated: 1.0/1.3/1.5/1.6 → 1.7**
-- 🔄 Fresh squashfs rebuild with v1.7 branding (ZSTD Level 15)
-- 🔄 Simplified ISO naming: Obsidian-v1.7.iso
-- 🔄 Updated build scripts for consistent v1.7 output
-- 🔄 Size optimized: 292 MB saved (documentation + locales removed)
-
-#### Fixed
-- 🐛 **All boot configs verified** (GRUB, ISOLINUX, 2x EFI images)
-- 🐛 **UPPERCASE path consistency** confirmed across all 4 configs
-- 🐛 **USB boot compatibility** verified (Rufus DD mode)
-- 🐛 No broken symlinks or misplaced files
-
-#### Quality Assurance
-- ✅ **Branding**: 10/10 checks passed
-- ✅ **Boot Configuration**: 4/4 checks passed (CRITICAL)
-- ✅ **Rootfs Structure**: 8/8 checks passed
-- ✅ **Enhancements**: 5/5 active and verified
-- ✅ **ISO Structure**: 3/3 checks passed
-- ✅ **Scripts & Docs**: 3/3 checks passed
-- ✅ **Total**: 33/33 comprehensive audit checks PASSED
-
-#### Technical
-- 📦 Kernel: 6.1.158-obsidian-obsidian (Custom)
-- 📦 ISO Size: **1.4 GB** (ZSTD Level 15)
-- 📦 Squashfs: 1.3 GB (70-second build)
-- 📦 Rootfs: 3.8 GB (optimized)
-- 📦 Build Date: 2026-01-08 01:17 UTC
-- 📦 MD5: `ddc72ec1d54bc98ea0c7d59e4403f548`
-- 📦 Boot: BIOS ✅ + UEFI ✅ (USB verified)
-- 📦 Quality: ✅ Production ready, comprehensive audit passed
-- 📦 Download: Available on [GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.7)
+1. **Change Default Password**: First thing after install!
+2. **Not Amnesic**: Data persists. Use disk encryption for sensitive data.
+3. **No Tor by Default**: Install `tor` and `torsocks` if needed.
 
 ---
 
-### v1.6 (2026-01-08) - "Enhanced Package"
+## 🏗️ Building from Source
 
-**Update: All Optional Enhancements + Critical Boot Fix**
+```bash
+# Clone repository
+git clone https://github.com/reapercanuk39/Obsidian.git
+cd Obsidian
 
-#### Added
-- ✨ Plymouth theme activation (obsidian-minimal)
-- ✨ Wallpaper collection generation (8 forge-themed)
-- ✨ Papirus icons with ember orange customization
-- ✨ Preload performance enhancement
-- ✨ GitHub Releases integration
+# Build ISO
+./scripts/rebuild-iso.sh
 
-#### Fixed
-- 🐛 **Critical EFI boot path fix** - UPPERCASE paths in EFI images
-- 🐛 USB boot failure resolved (file '/obsidian/vmlinuz' not found)
-- 🐛 All 4 boot config locations synchronized
+# Test in QEMU
+qemu-system-x86_64 -cdrom Obsidian-2.0-HARDENED.iso -m 4096 -enable-kvm
+```
 
 ---
 
-### v1.5 Optimized (2026-01-07 23:12 UTC) - "Lightweight & Fast"
+## 📄 License
 
-**Major Update: 77% Size Reduction + Structure Cleanup + UEFI Boot Fixed**
-
-#### Added
-- ✨ Comprehensive testing suite (19/19 tests passing)
-- ✨ Automated build scripts with optimization tools
-- ✨ Full documentation in REBUILD-CHANGELOG.md
-- ✨ ISO-OPTIMIZATION-GUIDE.md for future improvements
-- ✨ GitHub Releases integration for easy downloads
-
-#### Changed
-- 🚀 **ISO size: 4.7 GB → 1.1 GB** (77% reduction!)
-- 🚀 **Build time: 25 min → 8 min** (3x faster)
-- 🚀 **Download time: 63 min → 15 min** @ 10 Mbps
-- 🔄 Removed 17 GB kernel source code (not needed for live system)
-- 🔄 Removed legacy /casper directory (51 MB unused files)
-- 🔄 Removed backup files from ISO (10 MB)
-- 🔄 Fixed broken rootfs symlinks to point to Obsidian kernel
-- 🔄 Cleaned APT cache (85 MB)
-- 🔄 Removed old stock kernel files (1 MB)
-- 🔄 Optimized rootfs: 22 GB → 3.9 GB
-
-#### Fixed
-- 🐛 **UEFI boot fixed** - corrected xorriso ESP image reference
-- 🐛 BdsDxe "No bootable option" error resolved
-- 🐛 EFI System Partition structure corrected
-- 🐛 All boot configurations now use `/obsidian/` paths consistently
-- 🐛 Fixed all kernel symlinks to point to correct Obsidian kernel
-
-#### Technical
-- 📦 Kernel: 6.1.158-obsidian-obsidian (Custom)
-- 📦 ISO Size: **1.1 GB** (optimized & cleaned)
-- 📦 Squashfs: 1.0 GB (XZ compressed with parallel processing)
-- 📦 Rootfs: 3.9 GB (cleaned & optimized)
-- 📦 Build Date: 2026-01-07 23:12 UTC
-- 📦 MD5: `3af1195235b268206983a8864004ee0d`
-- 📦 Boot: BIOS ✅ + UEFI ✅ (both tested)
-- 📦 Testing: 19/19 comprehensive tests passed
-- 📦 Download: Available on [GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/tag/v1.5)
+This project is licensed under the GPL-3.0 License - see [LICENSE](LICENSE) for details.
 
 ---
 
-### v1.5 Initial (2026-01-07) - "Rebranded & Refined"
+## 🙏 Credits
 
-**Update: Full Rebranding with Default Credentials**
-
-#### Added
-- ✨ Default credentials: `obsidian` / `toor` for easy first boot
-- ✨ Proper `/obsidian/` boot directory structure
-- ✨ GitHub Releases for easy ISO distribution
-
-#### Changed
-- 🔄 Rebuilt squashfs with updated password
-- 🔄 ISO directory structure cleaned up
-- 🔄 Boot configuration verified for BIOS + UEFI
-
-#### Technical
-- 📦 Kernel: 6.1.0-41-amd64
-- 📦 ISO Size: 4.2 GB
-- 📦 Build Date: 2026-01-07 01:30 UTC
+- Based on Debian GNU/Linux
+- Security research from Tails, Whonix, Kicksecure, Qubes OS
+- XFCE Desktop Environment
+- Papirus Icon Theme
 
 ---
 
-### v1.1 (2026-01-06) - "Custom Obsidian Kernel"
-
-**Major Update: Fully Rebranded Kernel**
-
-#### Added
-- ✨ **Custom Obsidian Kernel 6.1.158-obsidian-obsidian** compiled from source
-- ✨ Kernel branding: `#obsidian SMP PREEMPT_DYNAMIC`
-- ✨ Custom default hostname: `obsidian`
-- ✨ Full module set for maximum hardware compatibility
-- ✨ Kernel config with `CONFIG_LOCALVERSION="-obsidian"`
-
-#### Changed
-- 🔄 Kernel from stock Debian (6.1.0-41-amd64) to custom Obsidian (6.1.158-obsidian-obsidian)
-- 🔄 Removed all Debian kernel maintainer references
-- 🔄 ISO size increased to 4.7 GB (from 1.4 GB) due to complete module set
-- 🔄 Initramfs rebuilt for new kernel
-
-#### Technical
-- 📦 Kernel: 6.1.158-obsidian-obsidian
-- 📦 Compiled: GCC 12.2.0
-- 📦 Build: Safe & compatible mode (all modules included)
-- 📦 ISO Size: 4.7 GB
-- 📦 Build Date: 2026-01-06 13:56 UTC
-- 📦 Build Time: ~2.5 hours (2-core system)
-
----
-
-### v1.0 (2026-01-05) - "Forged in Molten Steel"
-
-**Initial Release**
-
-#### Added
-- ✨ Custom VALYRIAN-Molten-Steel GTK theme
-- ✨ Plymouth "Obsidian Forge" 4-phase boot animation
-- ✨ Custom terminal prompt with 🔥 and 💎 emoji
-- ✨ 6 forge-themed bash aliases (forge, ember, anvil, temper, colors, quench)
-- ✨ LightDM themed login screen
-- ✨ Custom ASCII art logo and MOTD
-- ✨ Obsidian wallpapers (login and desktop)
-- ✨ Enhanced syntax highlighting (directories, executables, grep)
-- ✨ Xfce Terminal custom color scheme
-- ✨ light-locker screen locking integration
-
-#### Changed
-- 🔄 Renamed /casper to /obsidian (live system directory)
-- 🔄 OS name from "Debian" to "Obsidian"
-- 🔄 User account from generic to "obsidian"
-- 🔄 Boot menu entry to "Start Obsidian OS"
-- 🔄 Login banners to Obsidian branding
-- 🔄 System identity in /etc/os-release
-
-#### Removed
-- ❌ All Debian logos and pixmaps
-- ❌ All Ubuntu branding references
-- ❌ Default Debian desktop configurations
-
-#### Fixed
-- 🐛 Initramfs unpacking error (regenerated with mkinitramfs)
-- 🐛 Kernel panic on boot (proper cpio format)
-- 🐛 Boot path references (/casper → /obsidian)
-
-#### Technical
-- 📦 Base: Debian 12 (Bookworm)
-- 📦 Kernel: 6.1.0-41-amd64
-- 📦 Desktop: XFCE 4.18
-- 📦 ISO Size: 1.4 GB
-- 📦 Build Date: 2026-01-05 21:50 UTC
-
----
-
-## 🤝 Contributing
-
-Contributions are welcome! Please follow these guidelines:
-
-### Reporting Issues
-
-1. Check existing issues first
-2. Provide system information (OS, hardware, VM details)
-3. Include error messages and logs
-4. Screenshots help (especially for visual issues)
-
-### Feature Requests
-
-- Open an issue with `[Feature Request]` prefix
-- Describe the feature and use case
-- Consider if it fits the "forge" theme
-
-### Code Contributions
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Test your changes thoroughly
-4. Document your changes
-5. Submit a pull request
-
-### Theme Contributions
-
-- Follow VALYRIAN color palette
-- Maintain ember/steel aesthetic
-- Test on clean system
-- Provide before/after screenshots
-
----
-
-## 📜 License
-
-Obsidian OS is released under the **GNU General Public License v3.0**.
-
-See [LICENSE](LICENSE) file for details.
-
-### Component Licenses
-
-- **Debian**: Various open-source licenses
-- **XFCE**: GPL v2+
-- **Plymouth**: GPL v2+
-- **Custom Themes**: GPL v3.0
-- **Documentation**: CC-BY-SA 4.0
-
----
-
-## 🙏 Acknowledgments
-
-### Based On
-- **Debian Project** - Stable foundation
-- **XFCE Community** - Lightweight desktop
-- **Plymouth Project** - Boot splash framework
-
-### Inspiration
-- Volcanic/forge aesthetic
-- Game of Thrones (Valyrian steel)
-- Blacksmithing and metalwork
-
-### Tools Used
-- debootstrap - System bootstrap
-- chroot - System customization
-- squashfs-tools - Filesystem compression
-- xorriso - ISO creation
-- QEMU/KVM - Testing platform
-
----
-
-## 📞 Support & Contact
-
-### Community
-- **Forum**: [Coming soon]
-- **Discord**: [Coming soon]
-- **IRC**: [Coming soon]
-
-### Development
-- **GitHub**: [Repository]
-- **Issue Tracker**: [GitHub Issues]
-- **Wiki**: [Coming soon]
-
-### Social Media
-- **Twitter**: [Coming soon]
-- **Reddit**: [r/ObsidianOS] (Coming soon)
-- **YouTube**: [Coming soon]
-
----
-
-## 🗺️ Roadmap
-
-### Completed ✅
-
-- [x] Custom VALYRIAN-Molten-Steel theme
-- [x] Plymouth boot splash
-- [x] Custom Obsidian kernel (6.1.158-obsidian-obsidian)
-- [x] Full system rebranding
-- [x] Default credentials configured
-- [x] HTTP download mirror
-
-### v2.0 (Future)
-
-- [ ] Installer integration (Calamares)
-- [ ] Additional Plymouth themes
-- [ ] More wallpapers
-- [ ] Steam integration
-- [ ] Custom package repository
-- [ ] Obsidian-specific applications
-- [ ] Hardware-optimized builds
-- [ ] Performance tuning
-- [ ] Advanced theming options
-
-### Long-term Vision
-
-- Self-hosted package mirrors
-- Custom application suite
-- Gaming optimizations
-- Developer edition
-- Security-hardened edition
-- Server edition
-
----
-
-## 📊 Statistics
-
-**Project Started**: 2026-01-04  
-**Current Version**: 1.5  
-**Total Commits**: [TBD]  
-**Contributors**: [TBD]  
-**Downloads**: [TBD]  
-**Stars**: ⭐ [GitHub]
-
----
-
-## 🔥 The Forge Philosophy
-
-> "Just as blacksmiths forge steel in fire, we forge software with passion. Every line of code, every pixel, every configuration is carefully crafted and tempered. Obsidian OS is not just built—it is **forged**."
-
-**Our Values**:
-- 🔥 **Craftsmanship** - Attention to detail
-- 💎 **Quality** - Stable and reliable
-- ⚡ **Performance** - Fast and efficient
-- 🎨 **Aesthetics** - Beautiful and consistent
-- 🤝 **Community** - Open and welcoming
-
----
-
-## ⚠️ Disclaimer
-
-Obsidian OS is provided "as-is" without warranty of any kind. Use at your own risk.
-
-This is an independent distribution based on Debian. It is not affiliated with or endorsed by the Debian Project.
-
----
-
-## 📖 Quick Links
-
-- **Download**: [Release Page](#download)
-- **Installation**: [Installation Guide](#installation)
-- **Testing**: [Test Guide](WINDOWS-VM-TEST-GUIDE.md)
-- **Documentation**: [Docs Folder](#documentation)
-- **Issues**: [GitHub Issues]
-- **Contribute**: [Contributing](#contributing)
-
----
-
-<div align="center">
-
-## 🔥 Obsidian OS - Forged in Molten Steel 💎
-
-**Version 1.5** | **Released: 2026-01-07**
-
-[![Download](https://img.shields.io/badge/Download-ISO-orange.svg)](https://github.com/reapercanuk39/Obsidian/releases/latest)
-[![Documentation](https://img.shields.io/badge/Docs-Available-blue.svg)](#documentation)
-[![License](https://img.shields.io/badge/License-GPL--3.0-green.svg)](LICENSE)
-
----
-
-*"From fire and code, a new OS is born."*
-
----
-
-**Made with 🔥 and ⚡ by the Obsidian OS Community**
-
-</div>
+**Obsidian OS** — *Security Without Compromise*

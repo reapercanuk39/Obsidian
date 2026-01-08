@@ -1,5 +1,217 @@
 # Obsidian OS - Rebuild Changelog & Technical Notes
 
+**Last Updated**: 2026-01-08 03:17 UTC  
+**Current Version**: 2.0 HARDENED  
+**Session**: Security Hardening Implementation
+
+---
+
+## ��️ v2.0 HARDENED RELEASE (2026-01-08 03:12-03:17 UTC)
+
+### Session Goal
+User requested: Implement comprehensive security hardening to make Obsidian "the most secured OS on the planet", rebuild as v2.0 HARDENED, update GitHub release.
+
+### Security Research Conducted
+
+**Competitor Analysis**:
+- Tails OS: Amnesic design, RAM-only operation, Tor routing, memory wiping
+- Whonix: Dual-VM architecture, network isolation, Kicksecure base
+- Qubes OS: VM-based compartmentalization, disposable VMs
+- Kicksecure: Hardened Debian, kernel hardening, AppArmor
+
+**Frameworks Reviewed**:
+- CIS Debian Benchmarks
+- Linux kernel sysctl hardening best practices
+- AppArmor/SELinux MAC implementation
+- Anti-forensics techniques
+
+---
+
+### Security Features Implemented
+
+#### 1. Kernel Hardening (`/etc/sysctl.d/99-obsidian-hardening.conf`)
+```
+Network Protection:
+├── net.ipv4.conf.all.rp_filter = 1         (anti-spoofing)
+├── net.ipv4.tcp_syncookies = 1             (SYN flood protection)
+├── net.ipv4.conf.all.accept_redirects = 0  (MITM prevention)
+├── net.ipv4.conf.all.send_redirects = 0
+├── net.ipv4.conf.all.accept_source_route = 0
+├── net.ipv4.conf.all.log_martians = 1      (suspicious packet logging)
+└── net.ipv4.icmp_echo_ignore_broadcasts = 1
+
+Kernel Protection:
+├── kernel.randomize_va_space = 2           (full ASLR)
+├── kernel.kptr_restrict = 2                (hide kernel pointers)
+├── kernel.yama.ptrace_scope = 2            (restrict debugging)
+├── kernel.dmesg_restrict = 1               (restrict dmesg)
+├── kernel.sysrq = 0                        (disable magic SysRq)
+├── fs.suid_dumpable = 0                    (no SUID core dumps)
+├── net.core.bpf_jit_harden = 2             (harden BPF)
+└── kernel.perf_event_paranoid = 3          (restrict perf)
+
+Filesystem Protection:
+├── fs.protected_hardlinks = 1
+├── fs.protected_symlinks = 1
+├── fs.protected_fifos = 2
+└── fs.protected_regular = 2
+```
+
+#### 2. Firewall (nftables)
+```
+Policy: DROP all incoming by default
+Features:
+├── Stateful connection tracking
+├── Rate limiting (100 conn/sec)
+├── ICMP rate limiting (1/sec)
+├── Martian packet logging
+├── IPv6 neighbor discovery allowed
+└── Blocklist support for malicious IPs
+```
+
+#### 3. Security Packages Installed
+```
+Intrusion Prevention:
+├── fail2ban              ← Auto-ban attackers
+├── apparmor-profiles     ← 50+ MAC profiles
+├── apparmor-profiles-extra
+└── auditd                ← System auditing
+
+Application Sandboxing:
+├── firejail              ← Namespace isolation
+└── libpam-tmpdir         ← Private /tmp
+
+Detection & Scanning:
+├── rkhunter              ← Rootkit detection
+├── chkrootkit            ← Rootkit detection
+└── debsums               ← Package integrity
+
+Privacy & Anti-Forensics:
+├── macchanger            ← MAC randomization
+├── secure-delete         ← srm, sfill, sdmem, sswap
+└── bleachbit             ← System cleaner
+
+System Hardening:
+├── needrestart           ← Service restart alerts
+├── apt-listbugs          ← Security bug tracking
+└── apt-listchanges       ← Package change notifications
+```
+
+#### 4. Services Enabled
+- `nftables.service` - Firewall
+- `fail2ban.service` - Intrusion prevention
+- `auditd.service` - System auditing
+- `apparmor.service` - Mandatory Access Control
+- `memory-wipe.service` - RAM wipe on shutdown
+
+#### 5. Privacy Features
+- **MAC Spoofing**: Automatic randomization on network interface up
+- **Memory Wipe**: Secure RAM clearing on shutdown using sdmem
+- **Secure Delete**: Full suite for anti-forensics (srm, sfill, sswap, sdmem)
+
+---
+
+### Build Details
+
+**Squashfs Build**:
+```
+Compression: ZSTD Level 15
+Block size: 1 MB
+Processors: 4 cores
+Build time: 1m 6s
+Output size: 1.3 GB
+```
+
+**ISO Build**:
+```
+File: Obsidian-2.0-HARDENED.iso
+Size: 1.4 GB (688,840 sectors)
+MD5: 7f9ac97cd9f4bc83954f22ae829f39d8
+Format: Hybrid BIOS + UEFI
+```
+
+---
+
+### Files Created/Modified
+
+**New Files**:
+```
+rootfs/etc/sysctl.d/99-obsidian-hardening.conf    (kernel hardening)
+rootfs/etc/nftables.conf                          (firewall rules)
+rootfs/lib/systemd/system/memory-wipe.service     (RAM wipe service)
+rootfs/etc/NetworkManager/dispatcher.d/pre-up.d/00-mac-spoof
+rootfs/etc/obsidian-release                       (version info)
+docs/SECURITY-FEATURES.md                         (security documentation)
+```
+
+**Modified Files**:
+```
+rootfs/etc/os-release          (→ 2.0 HARDENED)
+rootfs/etc/lsb-release         (→ 2.0 HARDENED)
+rootfs/etc/issue               (→ 2.0 HARDENED)
+rootfs/etc/issue.net           (→ 2.0 HARDENED)
+iso/isolinux/isolinux.cfg      (→ v2.0 HARDENED)
+iso/boot/grub/grub.cfg         (→ v2.0 HARDENED)
+scripts/rebuild-iso.sh         (→ 2.0 output)
+```
+
+---
+
+### Security Comparison: Before vs After
+
+| Feature | v1.7 | v2.0 HARDENED |
+|---------|------|---------------|
+| Kernel Hardening | ❌ Default | ✅ 25+ settings |
+| Firewall | ❌ Empty | ✅ DROP policy |
+| Fail2ban | ❌ | ✅ Enabled |
+| AppArmor Profiles | 5 | 55+ |
+| Firejail | ❌ | ✅ |
+| MAC Spoofing | ❌ | ✅ Auto |
+| Memory Wipe | ❌ | ✅ On shutdown |
+| Rootkit Detection | ❌ | ✅ rkhunter + chkrootkit |
+| Secure Delete | ❌ | ✅ Full suite |
+| System Auditing | ❌ | ✅ auditd |
+
+---
+
+### Current Production ISO
+
+| Property | Value |
+|----------|-------|
+| **File** | `Obsidian-2.0-HARDENED.iso` |
+| **Size** | 1.4 GB |
+| **MD5** | `7f9ac97cd9f4bc83954f22ae829f39d8` |
+| **Compression** | ZSTD Level 15 |
+| **Boot** | BIOS ✅ + UEFI ✅ |
+| **Security** | HARDENED |
+| **GitHub** | https://github.com/reapercanuk39/Obsidian/releases/tag/v2.0 |
+
+---
+
+### Default Credentials
+- **Username**: `obsidian`
+- **Password**: `toor`
+
+---
+
+### Burning Instructions
+
+**Windows (Rufus)**:
+1. Download Rufus: https://rufus.ie/
+2. Select USB drive (8GB+)
+3. Select `Obsidian-2.0-HARDENED.iso`
+4. **IMPORTANT**: Choose **DD Image mode** when prompted
+5. Click START
+
+**Linux**:
+```bash
+sudo dd if=Obsidian-2.0-HARDENED.iso of=/dev/sdX bs=4M status=progress conv=fsync
+```
+
+---
+
+# Obsidian OS - Rebuild Changelog & Technical Notes
+
 **Last Updated**: 2026-01-08 02:29 UTC  
 **Session**: Test Suite & Documentation Added
 
