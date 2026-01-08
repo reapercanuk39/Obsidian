@@ -1,0 +1,12 @@
+[
+    {
+        "version": "2.0",
+        "arch": "x86_64",
+        "link": "https://github.com/reapercanuk39/Obsidian/releases/download/v2.0/Obsidian-2.0-HARDENED.iso",
+        "variant": "Obsidian",
+        "subvariant": "Obsidian",
+        "sha256": "793978ba88dcda1de7fe032dafadadce7dfa39aef1fc3a06aa698a86260d510a",
+        "size": "1410744320",
+        "releaseDate": "2025-06-27"
+    }
+]
