@@ -1,10 +1,10 @@
-# 🔥 Obsidian OS v1.5 - Forged in Molten Steel 💎
+# 🔥 Obsidian OS v1.6 - Forged in Molten Steel 💎
 
 **A Debian-based Linux distribution with custom VALYRIAN-Molten-Steel theming**
 
-[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.5-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%20OS%20v1.6-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
 
-[![Version](https://img.shields.io/badge/version-1.5-orange.svg)](https://github.com/reapercanuk39/Obsidian)
+[![Version](https://img.shields.io/badge/version-1.6-orange.svg)](https://github.com/reapercanuk39/Obsidian)
 [![Base](https://img.shields.io/badge/base-Debian%2012-red.svg)](https://www.debian.org/)
 [![Desktop](https://img.shields.io/badge/desktop-XFCE4-blue.svg)](https://xfce.org/)
 [![License](https://img.shields.io/badge/license-GPL--3.0-green.svg)](LICENSE)
