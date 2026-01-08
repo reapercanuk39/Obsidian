@@ -3216,3 +3216,74 @@ com.microsoft.Edge.desktop (original, unused)
 **Duration**: 4 minutes (implementation + build)  
 **Result**: SUCCESS ✅
 
+
+---
+
+## 📦 GitHub Release v1.6 Published (2026-01-08 00:01 UTC)
+
+### Release Details
+
+**Release URL**: https://github.com/reapercanuk39/Obsidian/releases/tag/v1.6
+**Title**: "🔥 Obsidian OS v1.6 - Enhanced & Optimized (1.3 GB) 💎"
+**Published**: 2026-01-08 00:01:22 UTC
+
+### Assets Uploaded
+
+1. **Obsidian-v1.5-Rebranded-20260107-2351.iso**
+   - Size: 1,299,677,184 bytes (1.3 GB)
+   - Format: Hybrid BIOS + UEFI
+   - Compression: ZSTD level 15
+   - MD5: `3fdf133febdb913175d1bf3a50977f5e`
+
+2. **Obsidian-v1.5-Rebranded-20260107-2351.iso.md5**
+   - Size: 76 bytes
+   - Checksum file for verification
+
+### Release Notes Summary
+
+**Major Enhancements**:
+- Preload installed for faster app launches
+- Papirus icon theme with 10,992 ember orange folders
+- 292 MB size optimization (docs + locales)
+- 7x faster builds with ZSTD compression
+- Simplified Plymouth boot theme prepared
+- Wallpaper collection structure ready
+
+**Technical Details**:
+- Kernel: 6.1.158-obsidian-obsidian (Custom)
+- Desktop: XFCE with VALYRIAN-Molten-Steel theme
+- Build time: 66 seconds
+- Boot: BIOS + UEFI verified
+
+### Download Statistics
+
+- Downloads: 0 (just published)
+- Size: Under 2 GB limit ✅
+- Available: Worldwide via GitHub CDN
+
+### Release Strategy
+
+**v1.6 (ZSTD)**:
+- Fast builds for development (66 seconds)
+- 1.3 GB ISO size
+- Perfect for testing and iterations
+
+**Future v1.7 (XZ) - Optional**:
+- Production compression (8 minutes build)
+- 1.1 GB ISO size
+- Optimized for distribution
+
+### Status
+
+✅ ISO uploaded successfully
+✅ Release notes published
+✅ Assets available for download
+✅ MD5 checksum provided
+✅ Release marked as latest
+
+---
+
+**Release Published**: 2026-01-08 00:01 UTC  
+**Total upload time**: ~8 minutes (1.3 GB)  
+**Result**: SUCCESS ✅
+
