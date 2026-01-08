@@ -1,7 +1,81 @@
 # Obsidian OS - Rebuild Changelog & Technical Notes
 
-**Last Updated**: 2026-01-08 01:49 UTC  
-**Session**: PERMANENT FIX - EFI Boot Error Automated Resolution
+**Last Updated**: 2026-01-08 02:02 UTC  
+**Session**: v1.7 Final Release - Fresh Squashfs Rebuild
+
+---
+
+## 🚀 v1.7 FINAL RELEASE: Fresh Squashfs Rebuild (2026-01-08 01:57-02:02 UTC)
+
+### Session Goal
+User requested: Fresh squashfs rebuild, delete previous ISOs, ensure no duplications, upload to GitHub releases.
+
+### Actions Completed
+
+#### 1. Cleanup
+- Deleted old `Obsidian-v1.7.iso` and checksum
+- Removed `archive/` directory (contained old backups)
+- Removed `rootfs/usr/share/plymouth/themes/obsidian/obsidian.script.backup`
+
+#### 2. Found & Fixed Remaining Lowercase Path
+During final verification, discovered one remaining lowercase reference:
+```
+iso/isolinux/isolinux.cfg line 112:
+  LINUX /obsidian/memtest 2>/dev/null
+```
+Fixed to: `LINUX /OBSIDIAN/memtest 2>/dev/null`
+
+#### 3. Fresh Squashfs Rebuild
+```bash
+mksquashfs rootfs iso/obsidian/filesystem.squashfs \
+  -comp zstd -Xcompression-level 15 -b 1M -processors 4 -no-duplicates
+```
+- **Size**: 1.3 GB (1,353,704 KB)
+- **Compression**: 38.63% of original
+- **Inodes**: 218,533
+- **Files**: 125,555
+- **Build time**: ~2 minutes
+
+#### 4. ISO Rebuild
+```bash
+./scripts/rebuild-iso.sh
+```
+- **Output**: `Obsidian-v1.7.iso`
+- **Size**: 1.4 GB (706,440 sectors)
+- **MD5**: `ddc72ec1d54bc98ea0c7d59e4403f548`
+
+#### 5. GitHub Release
+- Deleted old v1.7 release
+- Created new v1.7 release with fresh ISO
+- Uploaded: `Obsidian-v1.7.iso` + `Obsidian-v1.7.iso.md5`
+- URL: https://github.com/reapercanuk39/Obsidian/releases/tag/v1.7
+
+#### 6. Documentation & Git
+- Updated README.md with new MD5 checksum
+- Committed and pushed to master
+- Commit: `9c7f060`
+
+### Final Boot Configuration Status
+
+| Location | Path | Status |
+|----------|------|--------|
+| Main GRUB | `/OBSIDIAN/VMLINUZ` | ✅ |
+| ISOLINUX | `/OBSIDIAN/VMLINUZ` | ✅ |
+| EFI Image 1 | `/OBSIDIAN/VMLINUZ` | ✅ |
+| EFI Image 2 | `/OBSIDIAN/VMLINUZ` | ✅ |
+
+**All paths verified UPPERCASE - No more boot errors expected!**
+
+### Current Production ISO
+
+| Property | Value |
+|----------|-------|
+| **File** | `Obsidian-v1.7.iso` |
+| **Size** | 1.4 GB (1,445,140,480 bytes) |
+| **MD5** | `ddc72ec1d54bc98ea0c7d59e4403f548` |
+| **Compression** | ZSTD Level 15 |
+| **Boot** | BIOS ✅ + UEFI ✅ |
+| **GitHub** | https://github.com/reapercanuk39/Obsidian/releases/tag/v1.7 |
 
 ---
 
