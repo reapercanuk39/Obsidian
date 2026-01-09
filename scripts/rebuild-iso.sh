@@ -1,6 +1,6 @@
 #!/bin/bash
 #############################################
-# OBSIDIAN OS v2.0 HARDENED - ISO Builder
+# OBSIDIAN OS v2.1 FORTRESS - ISO Builder
 #############################################
 
 set -e
@@ -10,11 +10,11 @@ PROJECT_DIR="$(dirname "$SCRIPT_DIR")"
 ISO_DIR="$PROJECT_DIR/iso"
 OUTPUT_DIR="$PROJECT_DIR"
 
-ISO_NAME="Obsidian-2.0-HARDENED.iso"
+ISO_NAME="Obsidian-2.1-FORTRESS.iso"
 VOLUME_ID="OBSIDIAN"
-APP_ID="Obsidian OS V2.0 HARDENED"
+APP_ID="Obsidian OS V2.1 FORTRESS"
 
-echo "🔥 OBSIDIAN OS v2.0 HARDENED - ISO Builder"
+echo "🔥 OBSIDIAN OS v2.1 FORTRESS - ISO Builder"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 
 # Validate required files
