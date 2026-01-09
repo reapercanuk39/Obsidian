@@ -5729,3 +5729,73 @@ Pre-burn validation: 35/35 tests passed
 | USBGuard | ❌ | ✅ Installed |
 | Security status tool | ❌ | ✅ obsidian-security-status |
 
+
+---
+
+## 🚀 v2.1 FORTRESS Optimization Session (2026-01-09 23:16-23:25 UTC)
+
+### Session Goal
+User requested: Network enhancements, size optimizations, and SSD-specific tuning for USB SSD installation.
+
+### Size Optimizations Implemented
+
+| Item | Before | After | Saved |
+|------|--------|-------|-------|
+| /usr/src/linux-source | 132 MB | 0 | 132 MB |
+| /usr/share/doc | 88 MB | <1 MB | 87 MB |
+| /usr/share/man | 32 MB | <1 MB | 31 MB |
+| /usr/share/locale | 9 MB | 6 MB | 3 MB |
+| **ISO Total** | 1.4 GB | 1.2 GB | **200 MB** |
+
+### Network Enhancements
+
+**Packages Installed**:
+- openvpn - VPN client/server
+- wireguard-tools - Modern VPN
+- tor - Anonymity network
+- torsocks - Tor wrapper for applications
+
+**TCP/IP Stack Hardening**:
+```
+net.ipv4.tcp_fin_timeout = 15
+net.ipv4.tcp_tw_reuse = 1
+net.ipv4.tcp_keepalive_time = 300
+net.core.rmem_max = 16777216
+net.core.wmem_max = 16777216
+net.ipv4.tcp_fastopen = 3
+net.core.default_qdisc = fq
+net.ipv4.tcp_congestion_control = bbr
+net.ipv4.tcp_timestamps = 0
+```
+
+**New Commands**:
+- `obsidian-tor` - Tor control (start/stop/status/newid)
+- `obsidian-vpn` - VPN helper (OpenVPN & WireGuard)
+
+### SSD Optimizations
+
+**Kernel Parameters**:
+```
+vm.swappiness = 10
+vm.dirty_ratio = 10
+vm.dirty_background_ratio = 5
+vm.vfs_cache_pressure = 50
+```
+
+**Services**:
+- fstrim.timer enabled (weekly TRIM)
+
+**fstab Template Updated**:
+- noatime, nodiratime options
+- commit=60 for reduced writes
+- SSD I/O scheduler notes
+
+### Build Details
+
+```
+Squashfs: 1.1 GB (was 1.3 GB)
+ISO: 1.2 GB (was 1.4 GB)
+MD5: 624104c78294a34c22415bf5864fe55b
+Validation: 35/35 tests passed
+```
+

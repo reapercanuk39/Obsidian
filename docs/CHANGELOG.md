@@ -56,7 +56,7 @@ Obsidian OS is a **security-hardened Linux distribution** based on Debian 12 (Bo
 
 | File | Size | MD5 |
 |------|------|-----|
-| [Obsidian-2.1-FORTRESS.iso](https://github.com/reapercanuk39/Obsidian/releases/download/v2.1/Obsidian-2.1-FORTRESS.iso) | 1.4 GB | `9966a7565edf91e5b3a7ebbd63a2325a` |
+| [Obsidian-2.1-FORTRESS.iso](https://github.com/reapercanuk39/Obsidian/releases/download/v2.1/Obsidian-2.1-FORTRESS.iso) | 1.2 GB | `624104c78294a34c22415bf5864fe55b` |
 
 ### Download & Verify
 
@@ -65,7 +65,7 @@ Obsidian OS is a **security-hardened Linux distribution** based on Debian 12 (Bo
 wget https://github.com/reapercanuk39/Obsidian/releases/download/v2.1/Obsidian-2.1-FORTRESS.iso
 
 # Verify checksum
-echo "9966a7565edf91e5b3a7ebbd63a2325a  Obsidian-2.1-FORTRESS.iso" | md5sum -c
+echo "624104c78294a34c22415bf5864fe55b  Obsidian-2.1-FORTRESS.iso" | md5sum -c
 ```
 
 ### Create Bootable USB
@@ -374,9 +374,9 @@ isoinfo -l -i Obsidian-2.0-HARDENED.iso | grep OBSIDIAN
 
 ## 📜 Version History
 
-### v2.1 FORTRESS (2026-01-09)
+### v2.1 FORTRESS (2026-01-09) - Updated
 
-**Maximum security release** - Tier 2 hardening implementation:
+**Maximum security release** - Tier 2 hardening + optimizations:
 
 #### Authentication & Access Control
 - ✅ Account lockout after 5 failed attempts (15 min)
@@ -397,10 +397,22 @@ isoinfo -l -i Obsidian-2.0-HARDENED.iso | grep OBSIDIAN
 - ✅ DNSSEC validation enabled
 - ✅ Multicast DNS disabled
 - ✅ LLMNR disabled
+- ✅ **NEW**: OpenVPN pre-installed
+- ✅ **NEW**: WireGuard pre-installed
+- ✅ **NEW**: Tor + torsocks pre-installed
+- ✅ **NEW**: TCP/IP stack hardening (BBR, fast open, optimized buffers)
+- ✅ **NEW**: TCP timestamps disabled (fingerprinting prevention)
 
 #### Filesystem Security
 - ✅ Secure mount options (noexec,nosuid,nodev on /tmp, /dev/shm)
 - ✅ Auto-applied at boot via systemd service
+
+#### SSD Optimizations
+- ✅ **NEW**: TRIM timer enabled (weekly fstrim)
+- ✅ **NEW**: Swappiness reduced to 10
+- ✅ **NEW**: Dirty page writeback optimized
+- ✅ **NEW**: VFS cache pressure reduced
+- ✅ **NEW**: SSD fstab template included
 
 #### Monitoring & Detection
 - ✅ Lynis security auditing (with timer)
@@ -408,15 +420,24 @@ isoinfo -l -i Obsidian-2.0-HARDENED.iso | grep OBSIDIAN
 - ✅ ClamAV antivirus scanning
 - ✅ Security status command: `obsidian-security-status`
 
-**New Security Tools**:
+#### Size Optimizations
+- ✅ **NEW**: Removed kernel source (132 MB saved)
+- ✅ **NEW**: Removed documentation (88 MB saved)
+- ✅ **NEW**: Removed man pages (32 MB saved)
+- ✅ **NEW**: Cleaned unused locales
+- ✅ **ISO reduced from 1.4 GB to 1.2 GB**
+
+**New Commands**:
 - `obsidian-security-status` - Check security configuration
 - `obsidian-aide-init` - Initialize file integrity database
 - `obsidian-grub-password.sh` - Set bootloader password
+- `obsidian-tor` - Tor control (start/stop/status/newid)
+- `obsidian-vpn` - VPN helper (OpenVPN & WireGuard)
 
 **Build Details**:
 - File: `Obsidian-2.1-FORTRESS.iso`
-- Size: 1.4 GB
-- MD5: `9966a7565edf91e5b3a7ebbd63a2325a`
+- Size: 1.2 GB (optimized)
+- MD5: `624104c78294a34c22415bf5864fe55b`
 - Compression: ZSTD Level 15
 
 ### v2.0 HARDENED (2026-01-08)
