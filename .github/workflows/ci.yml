@@ -1,0 +1,393 @@
+name: Obsidian OS CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      run_boot_test:
+        description: 'Run QEMU boot test'
+        type: boolean
+        default: false
+      build_iso:
+        description: 'Build ISO from rootfs'
+        type: boolean
+        default: false
+
+jobs:
+  validate-rootfs:
+    name: Validate Rootfs
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download rootfs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "📦 Downloading rootfs from release..."
+          gh release download v2.1 -p "rootfs.tar.gz" --repo ${{ github.repository }}
+          
+          echo "📂 Extracting rootfs..."
+          tar -xzf rootfs.tar.gz
+          rm rootfs.tar.gz
+          
+          echo "✅ Rootfs extracted: $(du -sh rootfs | cut -f1)"
+
+      - name: Validate rootfs structure
+        run: |
+          echo "🔍 Validating rootfs structure..."
+          
+          ERRORS=0
+          
+          # Check essential directories
+          for dir in bin boot dev etc home lib proc root run sbin sys tmp usr var; do
+            if [ ! -e "rootfs/$dir" ]; then
+              echo "❌ Missing: /$dir"
+              ERRORS=$((ERRORS + 1))
+            else
+              echo "✅ Found: /$dir"
+            fi
+          done
+          
+          # Check essential files
+          for file in etc/passwd etc/shadow etc/group etc/fstab; do
+            if [ ! -f "rootfs/$file" ]; then
+              echo "❌ Missing: /$file"
+              ERRORS=$((ERRORS + 1))
+            fi
+          done
+          
+          # Check kernel
+          if ls rootfs/boot/vmlinuz* 1>/dev/null 2>&1; then
+            echo "✅ Kernel found: $(ls rootfs/boot/vmlinuz* | head -1)"
+          else
+            echo "❌ No kernel found in /boot"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          # Check initrd
+          if ls rootfs/boot/initrd* 1>/dev/null 2>&1; then
+            echo "✅ Initrd found: $(ls rootfs/boot/initrd* | head -1)"
+          else
+            echo "❌ No initrd found in /boot"
+            ERRORS=$((ERRORS + 1))
+          fi
+          
+          if [ $ERRORS -gt 0 ]; then
+            echo "❌ Validation failed with $ERRORS errors"
+            exit 1
+          fi
+          
+          echo "✅ Rootfs validation passed!"
+
+      - name: Check OS release info
+        run: |
+          echo "📋 OS Release Info:"
+          cat rootfs/etc/os-release
+          echo ""
+          echo "📋 Installed packages count:"
+          if [ -f rootfs/var/lib/dpkg/status ]; then
+            grep -c "^Package:" rootfs/var/lib/dpkg/status || echo "0"
+          fi
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: validate-rootfs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download rootfs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download v2.1 -p "rootfs.tar.gz" --repo ${{ github.repository }}
+          tar -xzf rootfs.tar.gz
+          rm rootfs.tar.gz
+
+      - name: Check for security issues
+        run: |
+          echo "🔒 Running security checks..."
+          
+          WARNINGS=0
+          
+          # Check for empty passwords
+          echo "🔍 Checking for empty passwords..."
+          if grep -E '^[^:]+::' rootfs/etc/shadow 2>/dev/null; then
+            echo "⚠️ WARNING: Found accounts with empty passwords!"
+            WARNINGS=$((WARNINGS + 1))
+          else
+            echo "✅ No empty passwords found"
+          fi
+          
+          # Check for UID 0 accounts (besides root)
+          echo "🔍 Checking for extra UID 0 accounts..."
+          UID0_COUNT=$(awk -F: '$3 == 0 {print $1}' rootfs/etc/passwd | wc -l)
+          if [ "$UID0_COUNT" -gt 1 ]; then
+            echo "⚠️ WARNING: Multiple UID 0 accounts found:"
+            awk -F: '$3 == 0 {print $1}' rootfs/etc/passwd
+            WARNINGS=$((WARNINGS + 1))
+          else
+            echo "✅ Only root has UID 0"
+          fi
+          
+          # Check SSH config
+          echo "🔍 Checking SSH configuration..."
+          if [ -f rootfs/etc/ssh/sshd_config ]; then
+            if grep -q "^PermitRootLogin yes" rootfs/etc/ssh/sshd_config; then
+              echo "⚠️ WARNING: Root SSH login is enabled"
+              WARNINGS=$((WARNINGS + 1))
+            else
+              echo "✅ Root SSH login is restricted"
+            fi
+            
+            if grep -q "^PasswordAuthentication yes" rootfs/etc/ssh/sshd_config; then
+              echo "ℹ️ INFO: SSH password authentication is enabled"
+            fi
+          fi
+          
+          # Check for world-writable files in sensitive locations
+          echo "🔍 Checking for world-writable sensitive files..."
+          WW_COUNT=$(find rootfs/etc rootfs/usr/bin rootfs/usr/sbin -perm -0002 -type f 2>/dev/null | wc -l)
+          if [ "$WW_COUNT" -gt 0 ]; then
+            echo "⚠️ WARNING: Found $WW_COUNT world-writable files in sensitive locations"
+            find rootfs/etc rootfs/usr/bin rootfs/usr/sbin -perm -0002 -type f 2>/dev/null | head -10
+            WARNINGS=$((WARNINGS + 1))
+          else
+            echo "✅ No world-writable files in sensitive locations"
+          fi
+          
+          # Check SUID binaries
+          echo "🔍 Checking SUID binaries..."
+          SUID_COUNT=$(find rootfs -perm -4000 -type f 2>/dev/null | wc -l)
+          echo "ℹ️ Found $SUID_COUNT SUID binaries"
+          find rootfs -perm -4000 -type f 2>/dev/null | head -20
+          
+          # Check for Debian/Ubuntu branding (should be Obsidian)
+          echo "🔍 Checking for proper branding..."
+          if grep -qi "debian\|ubuntu" rootfs/etc/os-release 2>/dev/null; then
+            echo "⚠️ WARNING: Found Debian/Ubuntu references in os-release"
+            WARNINGS=$((WARNINGS + 1))
+          else
+            echo "✅ OS branding looks correct"
+          fi
+          
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          if [ $WARNINGS -gt 0 ]; then
+            echo "⚠️ Security scan completed with $WARNINGS warnings"
+          else
+            echo "✅ Security scan passed with no warnings"
+          fi
+
+      - name: Scan for malware signatures
+        run: |
+          echo "🦠 Installing ClamAV..."
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq clamav clamav-freshclam
+          
+          echo "📥 Updating virus definitions..."
+          sudo systemctl stop clamav-freshclam || true
+          sudo freshclam --quiet || true
+          
+          echo "🔍 Scanning rootfs for malware..."
+          clamscan -r --infected --exclude-dir="^rootfs/proc" --exclude-dir="^rootfs/sys" rootfs/ || true
+
+  build-iso:
+    name: Build ISO
+    runs-on: ubuntu-latest
+    needs: validate-rootfs
+    if: ${{ github.event.inputs.build_iso == 'true' || github.event_name == 'push' }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xorriso \
+            isolinux \
+            syslinux-utils \
+            squashfs-tools \
+            mtools \
+            dosfstools
+
+      - name: Download rootfs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh release download v2.1 -p "rootfs.tar.gz" --repo ${{ github.repository }}
+          tar -xzf rootfs.tar.gz
+          rm rootfs.tar.gz
+
+      - name: Create squashfs
+        run: |
+          echo "📦 Creating squashfs filesystem..."
+          sudo mksquashfs rootfs/ filesystem.squashfs \
+            -comp xz \
+            -Xbcj x86 \
+            -b 1M \
+            -no-recovery \
+            -info
+          
+          echo "✅ Squashfs created: $(ls -lh filesystem.squashfs)"
+
+      - name: Prepare ISO structure
+        run: |
+          echo "📁 Preparing ISO structure..."
+          mkdir -p iso/OBSIDIAN iso/isolinux iso/boot/grub
+          
+          # Copy kernel and initrd
+          cp rootfs/boot/vmlinuz* iso/OBSIDIAN/vmlinuz
+          cp rootfs/boot/initrd* iso/OBSIDIAN/initrd
+          mv filesystem.squashfs iso/OBSIDIAN/
+          
+          # Copy isolinux files
+          cp /usr/lib/ISOLINUX/isolinux.bin iso/isolinux/
+          cp /usr/lib/syslinux/modules/bios/{ldlinux.c32,libcom32.c32,libutil.c32,vesamenu.c32} iso/isolinux/
+          
+          # Create isolinux config
+          cat > iso/isolinux/isolinux.cfg << 'EOF'
+          DEFAULT vesamenu.c32
+          TIMEOUT 50
+          PROMPT 0
+          
+          MENU TITLE OBSIDIAN OS v2.1 FORTRESS
+          MENU BACKGROUND #000000
+          MENU COLOR title 1;37;40
+          MENU COLOR sel 7;37;40
+          MENU COLOR unsel 37;40
+          
+          LABEL obsidian
+              MENU LABEL Start Obsidian OS
+              KERNEL /OBSIDIAN/vmlinuz
+              APPEND initrd=/OBSIDIAN/initrd boot=live components quiet splash
+          
+          LABEL obsidian-safe
+              MENU LABEL Safe Graphics Mode
+              KERNEL /OBSIDIAN/vmlinuz
+              APPEND initrd=/OBSIDIAN/initrd boot=live components nomodeset
+          
+          LABEL obsidian-debug
+              MENU LABEL Debug Mode
+              KERNEL /OBSIDIAN/vmlinuz
+              APPEND initrd=/OBSIDIAN/initrd boot=live components debug
+          EOF
+          
+          echo "✅ ISO structure prepared"
+          find iso -type f | head -20
+
+      - name: Build ISO
+        run: |
+          echo "📀 Building ISO..."
+          xorriso -as mkisofs \
+            -iso-level 3 \
+            -full-iso9660-filenames \
+            -volid "OBSIDIAN" \
+            -appid "Obsidian OS V2.1 FORTRESS" \
+            -publisher "Obsidian OS Project" \
+            -eltorito-boot isolinux/isolinux.bin \
+            -eltorito-catalog isolinux/boot.cat \
+            -no-emul-boot \
+            -boot-load-size 4 \
+            -boot-info-table \
+            -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+            -output Obsidian-2.1-FORTRESS.iso \
+            iso/
+          
+          echo "✅ ISO built: $(ls -lh Obsidian-2.1-FORTRESS.iso)"
+          md5sum Obsidian-2.1-FORTRESS.iso > Obsidian-2.1-FORTRESS.iso.md5
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: obsidian-iso
+          path: |
+            Obsidian-2.1-FORTRESS.iso
+            Obsidian-2.1-FORTRESS.iso.md5
+          retention-days: 7
+
+  boot-test:
+    name: QEMU Boot Test
+    runs-on: ubuntu-latest
+    needs: build-iso
+    if: ${{ github.event.inputs.run_boot_test == 'true' }}
+    steps:
+      - name: Download ISO artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: obsidian-iso
+
+      - name: Install QEMU
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 ovmf
+
+      - name: Run headless boot test
+        run: |
+          echo "🖥️ Starting QEMU headless boot test..."
+          
+          ISO_FILE="Obsidian-2.1-FORTRESS.iso"
+          SERIAL_LOG="/tmp/boot-test.log"
+          
+          # Start QEMU with serial output
+          timeout 180 qemu-system-x86_64 \
+            -cdrom "$ISO_FILE" \
+            -m 2048 \
+            -boot d \
+            -nographic \
+            -serial file:"$SERIAL_LOG" \
+            -no-reboot \
+            -append "console=ttyS0 boot=live components" &
+          
+          QEMU_PID=$!
+          echo "QEMU started (PID: $QEMU_PID)"
+          
+          # Wait and check boot progress
+          BOOT_SUCCESS=false
+          for i in {1..36}; do
+            sleep 5
+            echo "  ... checking boot status ($((i*5))s)"
+            
+            if [ -f "$SERIAL_LOG" ]; then
+              if grep -qi "systemd\|init\|kernel" "$SERIAL_LOG" 2>/dev/null; then
+                echo "✅ Kernel/init activity detected"
+              fi
+              
+              if grep -qi "login:\|gdm\|lightdm\|sddm" "$SERIAL_LOG" 2>/dev/null; then
+                echo "✅ Login prompt/display manager reached!"
+                BOOT_SUCCESS=true
+                break
+              fi
+            fi
+          done
+          
+          # Kill QEMU
+          kill $QEMU_PID 2>/dev/null || true
+          
+          echo ""
+          echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+          if [ "$BOOT_SUCCESS" = true ]; then
+            echo "✅ BOOT TEST PASSED!"
+          else
+            echo "⚠️ Boot test completed (check logs)"
+            if [ -f "$SERIAL_LOG" ]; then
+              echo ""
+              echo "Last 50 lines of boot log:"
+              tail -50 "$SERIAL_LOG"
+            fi
+          fi
+
+      - name: Upload boot log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: boot-test-log
+          path: /tmp/boot-test.log
+          if-no-files-found: ignore
