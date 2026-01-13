@@ -32,7 +32,9 @@ jobs:
           gh release download v2.1 -p "rootfs.tar.gz" --repo ${{ github.repository }}
           
           echo "📂 Extracting rootfs..."
-          tar -xzf rootfs.tar.gz
+          # Exclude dev nodes (can't create without root) and ignore errors
+          tar -xzf rootfs.tar.gz --exclude='rootfs/dev/*' --warning=no-unknown-keyword 2>/dev/null || true
+          mkdir -p rootfs/dev
           rm rootfs.tar.gz
           
           echo "✅ Rootfs extracted: $(du -sh rootfs | cut -f1)"
@@ -107,7 +109,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download v2.1 -p "rootfs.tar.gz" --repo ${{ github.repository }}
-          tar -xzf rootfs.tar.gz
+          tar -xzf rootfs.tar.gz --exclude='rootfs/dev/*' --warning=no-unknown-keyword 2>/dev/null || true
+          mkdir -p rootfs/dev
           rm rootfs.tar.gz
 
       - name: Check for security issues
@@ -223,7 +226,8 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh release download v2.1 -p "rootfs.tar.gz" --repo ${{ github.repository }}
-          tar -xzf rootfs.tar.gz
+          tar -xzf rootfs.tar.gz --exclude='rootfs/dev/*' --warning=no-unknown-keyword 2>/dev/null || true
+          mkdir -p rootfs/dev
           rm rootfs.tar.gz
 
       - name: Create squashfs
