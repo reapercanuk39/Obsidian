@@ -393,9 +393,6 @@ jobs:
     outputs:
       test_passed: ${{ steps.test.outputs.passed }}
     
-    outputs:
-      test_passed: ${{ steps.test.outputs.passed }}
-    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -887,8 +884,8 @@ jobs:
   failure_summary:
     name: Generate Failure Summary
     runs-on: ubuntu-latest
-    needs: [validate_paths, detect_changes, build_iso, iso_diff, qemu_test, virtualbox_test]
-    if: failure()
+    needs: [validate_paths, detect_changes, build_iso, iso_diff, qemu_test]
+    if: ${{ always() && (needs.validate_paths.result == 'failure' || needs.build_iso.result == 'failure' || needs.qemu_test.result == 'failure') }}
     
     steps:
       - name: Download all failure artifacts
@@ -931,12 +928,6 @@ jobs:
           if [ "${{ needs.qemu_test.result }}" = "failure" ]; then
             echo "### ❌ qemu_test" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
             echo "QEMU boot test failed. The ISO may not boot correctly." >> artifacts/failures/CONSOLIDATED_SUMMARY.md
-            echo "" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
-          fi
-          
-          if [ "${{ needs.virtualbox_test.result }}" = "failure" ]; then
-            echo "### ❌ virtualbox_test" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
-            echo "VirtualBox graphical boot test failed. Check screenshots and VM logs." >> artifacts/failures/CONSOLIDATED_SUMMARY.md
             echo "" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
           fi
           
