@@ -1,0 +1,828 @@
+###############################################################################
+# OBSIDIAN ISO CI/CD PIPELINE
+# Full automated build, test, and release system
+###############################################################################
+
+name: Obsidian ISO CI/CD
+
+on:
+  push:
+    branches: [main, master, develop]
+    paths:
+      - 'rootfs/**'
+      - 'iso/**'
+      - 'scripts/**'
+      - 'overlay/**'
+      - 'packages/**'
+      - 'installer/**'
+      - '.github/workflows/obsidian-iso-ci.yml'
+  
+  pull_request:
+    branches: [main, master]
+  
+  workflow_dispatch:
+    inputs:
+      force_rebuild:
+        description: 'Force full rebuild (ignore change detection)'
+        type: boolean
+        default: false
+      run_qemu_test:
+        description: 'Run QEMU boot tests'
+        type: boolean
+        default: true
+      create_release:
+        description: 'Create GitHub release after successful build'
+        type: boolean
+        default: false
+      version:
+        description: 'Version number (e.g., 2.1.1)'
+        type: string
+        default: ''
+  
+  schedule:
+    # Nightly build at 2 AM UTC
+    - cron: '0 2 * * *'
+
+env:
+  ISO_NAME: Obsidian-2.1-FORTRESS.iso
+  VERSION: ${{ inputs.version || '2.1' }}
+  CODENAME: FORTRESS
+
+permissions:
+  contents: write
+  packages: write
+  actions: read
+
+###############################################################################
+# JOBS
+###############################################################################
+
+jobs:
+  #############################################################################
+  # JOB 1: VALIDATE PATHS
+  #############################################################################
+  validate_paths:
+    name: Validate ISO Paths
+    runs-on: ubuntu-latest
+    outputs:
+      validation_passed: ${{ steps.validate.outputs.passed }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Run path validation
+        id: validate
+        run: |
+          chmod +x scripts/validate-iso-prefix.sh
+          
+          echo "🔍 Running ISO prefix/path validator..."
+          
+          if scripts/validate-iso-prefix.sh rootfs /tmp/violations.txt /tmp/validation-summary.md; then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Path validation passed"
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+            echo "❌ Path validation failed"
+            cat /tmp/violations.txt || true
+          fi
+
+      - name: Upload validation report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: path-validation-report
+          path: |
+            /tmp/validation-summary.md
+            /tmp/violations.txt
+          if-no-files-found: ignore
+
+      - name: Fail on validation errors
+        if: steps.validate.outputs.passed == 'false'
+        run: exit 1
+
+  #############################################################################
+  # JOB 2: DETECT CHANGES
+  #############################################################################
+  detect_changes:
+    name: Detect Package Changes
+    runs-on: ubuntu-latest
+    outputs:
+      rebuild_required: ${{ steps.detect.outputs.rebuild_required }}
+      full_rebuild: ${{ steps.detect.outputs.full_rebuild }}
+      changed_components: ${{ steps.detect.outputs.changed_components }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect changes since last build
+        id: detect
+        env:
+          LAST_BUILD_SHA: ${{ github.event.before }}
+        run: |
+          chmod +x scripts/detect-iso-package-changes.sh
+          
+          echo "🔍 Detecting changes..."
+          
+          # Run change detection
+          scripts/detect-iso-package-changes.sh
+          
+          # Check if force rebuild is requested
+          if [ "${{ github.event.inputs.force_rebuild }}" = "true" ]; then
+            echo "rebuild_required=true" >> "$GITHUB_OUTPUT"
+            echo "full_rebuild=true" >> "$GITHUB_OUTPUT"
+            echo "🔄 Force rebuild requested"
+          fi
+
+      - name: Upload change detection report
+        uses: actions/upload-artifact@v4
+        with:
+          name: change-detection-report
+          path: |
+            /tmp/rebuild-components.txt
+            /tmp/rebuild-components.json
+          if-no-files-found: ignore
+
+  #############################################################################
+  # JOB 3: BUILD ISO
+  #############################################################################
+  build_iso:
+    name: Build Obsidian ISO
+    runs-on: ubuntu-latest
+    needs: [validate_paths, detect_changes]
+    if: |
+      always() && 
+      needs.validate_paths.result == 'success' &&
+      (needs.detect_changes.outputs.rebuild_required == 'true' || 
+       github.event.inputs.force_rebuild == 'true' ||
+       github.event_name == 'workflow_dispatch' ||
+       github.event_name == 'schedule')
+    
+    outputs:
+      iso_name: ${{ steps.build.outputs.iso_name }}
+      iso_sha256: ${{ steps.build.outputs.iso_sha256 }}
+      build_id: ${{ steps.build.outputs.build_id }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Free disk space
+        run: |
+          echo "🧹 Freeing disk space..."
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc
+          sudo apt-get clean
+          df -h
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            xorriso \
+            isolinux \
+            syslinux-common \
+            syslinux-utils \
+            squashfs-tools \
+            mtools \
+            dosfstools \
+            grub-pc-bin \
+            grub-efi-amd64-bin \
+            fakeroot \
+            rsync \
+            jq
+
+      - name: Build ISO
+        id: build
+        env:
+          BUILD_ID: ${{ github.sha }}
+          VERSION: ${{ env.VERSION }}
+          CODENAME: ${{ env.CODENAME }}
+        run: |
+          chmod +x scripts/build-obsidian-iso.sh
+          
+          echo "🔥 Building Obsidian ISO..."
+          
+          # Run the build script
+          scripts/build-obsidian-iso.sh
+          
+          # Get outputs
+          ISO_FILE=$(ls Obsidian-*.iso | head -1)
+          ISO_SHA256=$(cat "${ISO_FILE}.sha256" | cut -d' ' -f1)
+          
+          echo "iso_name=$ISO_FILE" >> "$GITHUB_OUTPUT"
+          echo "iso_sha256=$ISO_SHA256" >> "$GITHUB_OUTPUT"
+          echo "build_id=${GITHUB_SHA::8}" >> "$GITHUB_OUTPUT"
+          
+          echo "✅ Build complete: $ISO_FILE"
+
+      - name: Run post-build validation
+        run: |
+          chmod +x scripts/validate-iso-prefix.sh
+          
+          echo "🔍 Running post-build validation on ISO contents..."
+          
+          # Extract and validate
+          mkdir -p /tmp/iso-check
+          xorriso -osirrox on -indev "${{ steps.build.outputs.iso_name }}" -extract /OBSIDIAN/filesystem.squashfs /tmp/squashfs.img 2>/dev/null || true
+          
+          if [ -f /tmp/squashfs.img ]; then
+            sudo unsquashfs -d /tmp/iso-check/rootfs /tmp/squashfs.img >/dev/null 2>&1 || true
+            scripts/validate-iso-prefix.sh /tmp/iso-check/rootfs || true
+          fi
+
+      - name: Upload ISO artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: obsidian-iso
+          path: |
+            ${{ steps.build.outputs.iso_name }}
+            ${{ steps.build.outputs.iso_name }}.sha256
+            ${{ steps.build.outputs.iso_name }}.md5
+            build-manifest.json
+          retention-days: 14
+
+      - name: Collect failure logs
+        if: failure()
+        run: |
+          mkdir -p artifacts/failures/build_iso
+          
+          # Collect relevant logs
+          dmesg > artifacts/failures/build_iso/dmesg.log 2>/dev/null || true
+          cp /tmp/*.log artifacts/failures/build_iso/ 2>/dev/null || true
+          
+          # Generate failure summary
+          cat > artifacts/failures/build_iso/SUMMARY.md << 'EOF'
+          # Build Failure Summary
+          
+          **Job:** build_iso
+          **Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Commit:** ${{ github.sha }}
+          
+          ## Likely Causes
+          
+          - Missing build dependencies
+          - Corrupted rootfs or ISO structure
+          - Disk space issues
+          - Permission problems with squashfs creation
+          
+          ## Suggested Actions
+          
+          1. Check if all required files exist in `iso/` directory
+          2. Verify `rootfs/` is properly extracted
+          3. Ensure ISOLINUX files are present
+          4. Check for EFI image issues
+          
+          ## Related Components
+          
+          - `scripts/build-obsidian-iso.sh`
+          - `iso/isolinux/`
+          - `iso/boot/grub/`
+          - `iso/OBSIDIAN/`
+          EOF
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-logs-build
+          path: artifacts/failures/
+
+  #############################################################################
+  # JOB 4: ISO DIFF ANALYSIS
+  #############################################################################
+  iso_diff:
+    name: ISO Diff Analysis
+    runs-on: ubuntu-latest
+    needs: build_iso
+    if: success() && github.event_name != 'pull_request'
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y xorriso squashfs-tools jq
+
+      - name: Download new ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: obsidian-iso
+          path: new-iso/
+
+      - name: Download previous release ISO
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          mkdir -p old-iso
+          
+          # Try to get the latest release ISO
+          LATEST_TAG=$(gh release list --limit 1 --json tagName -q '.[0].tagName' 2>/dev/null || echo "")
+          
+          if [ -n "$LATEST_TAG" ]; then
+            echo "📥 Downloading previous release: $LATEST_TAG"
+            gh release download "$LATEST_TAG" -p "*.iso" -D old-iso/ 2>/dev/null || true
+          fi
+          
+          if [ -z "$(ls old-iso/*.iso 2>/dev/null)" ]; then
+            echo "⚠️ No previous release ISO found, will compare with self"
+            cp new-iso/*.iso old-iso/ 2>/dev/null || true
+          fi
+
+      - name: Run ISO diff analysis
+        run: |
+          chmod +x scripts/iso-diff.sh
+          
+          OLD_ISO=$(ls old-iso/*.iso | head -1)
+          NEW_ISO=$(ls new-iso/*.iso | head -1)
+          
+          echo "📊 Comparing ISOs..."
+          echo "  Old: $OLD_ISO"
+          echo "  New: $NEW_ISO"
+          
+          sudo scripts/iso-diff.sh "$OLD_ISO" "$NEW_ISO" /tmp/iso-diff-report.md
+
+      - name: Upload diff report
+        uses: actions/upload-artifact@v4
+        with:
+          name: iso-diff-report
+          path: /tmp/iso-diff-report.md
+
+  #############################################################################
+  # JOB 5: QEMU BOOT TEST
+  #############################################################################
+  qemu_test:
+    name: QEMU Boot Test
+    runs-on: ubuntu-latest
+    needs: build_iso
+    if: |
+      success() && 
+      (github.event.inputs.run_qemu_test == 'true' || 
+       github.event_name == 'schedule' ||
+       github.event_name == 'push')
+    
+    outputs:
+      test_passed: ${{ steps.test.outputs.passed }}
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install QEMU
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y qemu-system-x86 qemu-utils ovmf socat
+
+      - name: Download ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: obsidian-iso
+
+      - name: Run QEMU boot test
+        id: test
+        env:
+          BOOT_TIMEOUT: 300
+          QEMU_MEMORY: 2048
+          TEST_MODE: full
+        run: |
+          chmod +x scripts/qemu-boot-test.sh
+          
+          ISO_FILE=$(ls Obsidian-*.iso | head -1)
+          
+          echo "🖥️ Running QEMU boot test..."
+          echo "  ISO: $ISO_FILE"
+          echo "  Timeout: ${BOOT_TIMEOUT}s"
+          echo "  Memory: ${QEMU_MEMORY}MB"
+          
+          if scripts/qemu-boot-test.sh "$ISO_FILE"; then
+            echo "passed=true" >> "$GITHUB_OUTPUT"
+            echo "✅ Boot test passed!"
+          else
+            echo "passed=false" >> "$GITHUB_OUTPUT"
+            echo "❌ Boot test failed!"
+          fi
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: qemu-test-results
+          path: |
+            /tmp/qemu-boot-test-*/
+            artifacts/qemu-test/
+          if-no-files-found: ignore
+
+      - name: Collect failure logs
+        if: failure()
+        run: |
+          mkdir -p artifacts/failures/qemu_test
+          
+          cp /tmp/qemu-boot-test-*/*.log artifacts/failures/qemu_test/ 2>/dev/null || true
+          cp /tmp/qemu-boot-test-*/SUMMARY.md artifacts/failures/qemu_test/ 2>/dev/null || true
+          
+          cat > artifacts/failures/qemu_test/SUMMARY.md << 'EOF'
+          # QEMU Boot Test Failure
+          
+          **Job:** qemu_test
+          **Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          ## Likely Causes
+          
+          - Kernel panic during boot
+          - Missing initrd components
+          - Bootloader misconfiguration
+          - Squashfs mount failure
+          - Systemd service failures
+          
+          ## Suggested Actions
+          
+          1. Check console.log for kernel panic messages
+          2. Verify isolinux.cfg boot parameters
+          3. Check initrd contains live-boot scripts
+          4. Verify squashfs integrity
+          
+          ## Related Components
+          
+          - `iso/OBSIDIAN/vmlinuz`
+          - `iso/OBSIDIAN/initrd`
+          - `iso/isolinux/isolinux.cfg`
+          - `iso/boot/grub/grub.cfg`
+          EOF
+
+      - name: Upload failure artifacts
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-logs-qemu
+          path: artifacts/failures/
+
+  #############################################################################
+  # JOB 6: PUBLISH ISO
+  #############################################################################
+  publish_iso:
+    name: Publish ISO
+    runs-on: ubuntu-latest
+    needs: [build_iso, qemu_test]
+    if: |
+      success() && 
+      github.event_name != 'pull_request' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download ISO
+        uses: actions/download-artifact@v4
+        with:
+          name: obsidian-iso
+
+      - name: Update latest.json
+        run: |
+          ISO_FILE=$(ls Obsidian-*.iso | head -1)
+          ISO_SIZE=$(stat -c%s "$ISO_FILE")
+          ISO_SHA256=$(cat "${ISO_FILE}.sha256" | cut -d' ' -f1)
+          
+          cat > latest.json << EOF
+          {
+            "name": "Obsidian OS",
+            "version": "${{ env.VERSION }}",
+            "codename": "${{ env.CODENAME }}",
+            "build_id": "${{ needs.build_iso.outputs.build_id }}",
+            "build_date": "$(date -u +"%Y-%m-%dT%H:%M:%SZ")",
+            "iso_file": "$ISO_FILE",
+            "iso_size": $ISO_SIZE,
+            "iso_size_human": "$(numfmt --to=iec $ISO_SIZE)",
+            "sha256": "$ISO_SHA256",
+            "download_url": "https://github.com/${{ github.repository }}/releases/download/v${{ env.VERSION }}/$ISO_FILE",
+            "release_notes": "https://github.com/${{ github.repository }}/releases/tag/v${{ env.VERSION }}"
+          }
+          EOF
+          
+          cat latest.json
+
+      - name: Upload latest.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: latest-metadata
+          path: latest.json
+
+  #############################################################################
+  # JOB 7: CREATE RELEASE
+  #############################################################################
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+    needs: [build_iso, qemu_test, iso_diff, publish_iso]
+    if: |
+      success() && 
+      (github.event.inputs.create_release == 'true' || 
+       (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')))
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+
+      - name: Prepare release assets
+        run: |
+          mkdir -p release-assets
+          
+          # Copy ISO and checksums
+          cp obsidian-iso/*.iso release-assets/
+          cp obsidian-iso/*.sha256 release-assets/
+          cp obsidian-iso/*.md5 release-assets/
+          cp obsidian-iso/build-manifest.json release-assets/
+          
+          # Copy reports
+          cp iso-diff-report/iso-diff-report.md release-assets/ 2>/dev/null || true
+          cp path-validation-report/validation-summary.md release-assets/ 2>/dev/null || true
+          cp latest-metadata/latest.json release-assets/ 2>/dev/null || true
+          
+          # Copy test results
+          cp -r qemu-test-results release-assets/ 2>/dev/null || true
+          
+          ls -la release-assets/
+
+      - name: Generate release notes
+        run: |
+          cat > release-assets/RELEASE_NOTES.md << EOF
+          # Obsidian OS ${{ env.VERSION }} (${{ env.CODENAME }})
+          
+          **Build Date:** $(date -u +"%Y-%m-%d")
+          **Build ID:** ${{ needs.build_iso.outputs.build_id }}
+          **Commit:** ${{ github.sha }}
+          
+          ## Downloads
+          
+          | File | SHA256 |
+          |------|--------|
+          | ${{ needs.build_iso.outputs.iso_name }} | \`${{ needs.build_iso.outputs.iso_sha256 }}\` |
+          
+          ## Verification
+          
+          \`\`\`bash
+          sha256sum -c ${{ needs.build_iso.outputs.iso_name }}.sha256
+          \`\`\`
+          
+          ## Boot Instructions
+          
+          1. Write ISO to USB: \`sudo dd if=Obsidian-*.iso of=/dev/sdX bs=4M status=progress\`
+          2. Or use [balenaEtcher](https://www.balena.io/etcher/)
+          3. Boot from USB and select "Obsidian OS (Live)" from the menu
+          
+          ## What's New
+          
+          See attached diff report for changes since last release.
+          
+          ## CI/CD Pipeline Results
+          
+          - ✅ Path validation passed
+          - ✅ ISO build successful
+          - ✅ QEMU boot test passed
+          - ✅ ISO diff analysis complete
+          
+          ---
+          
+          *Built automatically by GitHub Actions*
+          EOF
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ env.VERSION }}-${{ needs.build_iso.outputs.build_id }}
+          name: Obsidian OS ${{ env.VERSION }} (${{ env.CODENAME }})
+          body_path: release-assets/RELEASE_NOTES.md
+          draft: false
+          prerelease: ${{ github.event_name == 'schedule' }}
+          files: |
+            release-assets/*.iso
+            release-assets/*.sha256
+            release-assets/*.md5
+            release-assets/build-manifest.json
+            release-assets/iso-diff-report.md
+            release-assets/latest.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  #############################################################################
+  # JOB 8: UPDATE DOCUMENTATION
+  #############################################################################
+  update_docs:
+    name: Update Documentation
+    runs-on: ubuntu-latest
+    needs: [build_iso, qemu_test]
+    if: |
+      success() && 
+      github.event_name != 'pull_request' &&
+      (github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master')
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: obsidian-iso
+
+      - name: Update CHANGELOG.md
+        run: |
+          BUILD_DATE=$(date -u +"%Y-%m-%d")
+          BUILD_ID="${{ needs.build_iso.outputs.build_id }}"
+          
+          # Create changelog entry
+          ENTRY="## [${{ env.VERSION }}] - $BUILD_DATE
+
+          ### Build Information
+          - **Build ID:** $BUILD_ID
+          - **Commit:** ${{ github.sha }}
+          - **ISO:** ${{ needs.build_iso.outputs.iso_name }}
+          - **SHA256:** \`${{ needs.build_iso.outputs.iso_sha256 }}\`
+
+          ### Changes
+          - Automated CI/CD build
+          - Path validation passed
+          - QEMU boot test passed
+
+          ---
+          "
+          
+          # Prepend to CHANGELOG if it exists, otherwise create
+          if [ -f CHANGELOG.md ]; then
+            echo -e "$ENTRY\n$(cat CHANGELOG.md)" > CHANGELOG.md
+          else
+            echo -e "# Changelog\n\n$ENTRY" > CHANGELOG.md
+          fi
+
+      - name: Update BUILD_NOTES.md
+        run: |
+          cat > docs/BUILD_NOTES.md << EOF
+          # Build Notes
+          
+          Last updated: $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          
+          ## Latest Build
+          
+          | Property | Value |
+          |----------|-------|
+          | Version | ${{ env.VERSION }} |
+          | Codename | ${{ env.CODENAME }} |
+          | Build ID | ${{ needs.build_iso.outputs.build_id }} |
+          | Commit | ${{ github.sha }} |
+          | ISO File | ${{ needs.build_iso.outputs.iso_name }} |
+          | SHA256 | \`${{ needs.build_iso.outputs.iso_sha256 }}\` |
+          
+          ## Build System
+          
+          This ISO is built using GitHub Actions with the following pipeline:
+          
+          1. **validate_paths** - Scans for forbidden Termux/Android paths
+          2. **detect_changes** - Determines which components need rebuild
+          3. **build_iso** - Assembles rootfs, creates squashfs, builds ISO
+          4. **iso_diff** - Compares with previous release
+          5. **qemu_test** - Headless boot test in QEMU
+          6. **publish_iso** - Updates metadata
+          7. **release** - Creates GitHub release
+          8. **update_docs** - Updates documentation
+          
+          ## Reproducing the Build
+          
+          \`\`\`bash
+          # Clone repository
+          git clone https://github.com/${{ github.repository }}.git
+          cd obsidian-build
+          
+          # Install dependencies
+          sudo ./scripts/install-iso-debug-tools.sh
+          
+          # Build ISO
+          sudo ./scripts/build-obsidian-iso.sh
+          
+          # Run tests
+          ./scripts/validate-iso-prefix.sh rootfs
+          ./scripts/qemu-boot-test.sh Obsidian-*.iso
+          \`\`\`
+          
+          ## CI/CD Configuration
+          
+          See \`.github/workflows/obsidian-iso-ci.yml\` for the complete pipeline configuration.
+          EOF
+
+      - name: Commit documentation updates
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          
+          git add CHANGELOG.md docs/BUILD_NOTES.md
+          
+          if git diff --staged --quiet; then
+            echo "No documentation changes to commit"
+          else
+            git commit -m "docs: Update build documentation [skip ci]
+
+          Build ID: ${{ needs.build_iso.outputs.build_id }}
+          ISO: ${{ needs.build_iso.outputs.iso_name }}"
+            
+            git push
+          fi
+
+  #############################################################################
+  # JOB: FAILURE SUMMARY (runs on any failure)
+  #############################################################################
+  failure_summary:
+    name: Generate Failure Summary
+    runs-on: ubuntu-latest
+    needs: [validate_paths, detect_changes, build_iso, iso_diff, qemu_test]
+    if: failure()
+    
+    steps:
+      - name: Download all failure artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: failure-logs-*
+          merge-multiple: true
+        continue-on-error: true
+
+      - name: Generate consolidated failure report
+        run: |
+          mkdir -p artifacts/failures
+          
+          cat > artifacts/failures/CONSOLIDATED_SUMMARY.md << 'EOF'
+          # CI/CD Pipeline Failure Report
+          
+          **Workflow:** Obsidian ISO CI/CD
+          **Run ID:** ${{ github.run_id }}
+          **Timestamp:** $(date -u +"%Y-%m-%d %H:%M:%S UTC")
+          **Commit:** ${{ github.sha }}
+          **Branch:** ${{ github.ref_name }}
+          
+          ## Failed Jobs
+          
+          EOF
+          
+          # Check each job status
+          if [ "${{ needs.validate_paths.result }}" = "failure" ]; then
+            echo "### ❌ validate_paths" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+            echo "Path validation detected forbidden strings or paths in the ISO filesystem." >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+            echo "" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+          fi
+          
+          if [ "${{ needs.build_iso.result }}" = "failure" ]; then
+            echo "### ❌ build_iso" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+            echo "ISO build failed. Check squashfs creation and xorriso output." >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+            echo "" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+          fi
+          
+          if [ "${{ needs.qemu_test.result }}" = "failure" ]; then
+            echo "### ❌ qemu_test" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+            echo "QEMU boot test failed. The ISO may not boot correctly." >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+            echo "" >> artifacts/failures/CONSOLIDATED_SUMMARY.md
+          fi
+          
+          cat >> artifacts/failures/CONSOLIDATED_SUMMARY.md << 'EOF'
+          
+          ## Suggested Next Steps
+          
+          1. Review the individual job logs above
+          2. Check the attached failure artifacts
+          3. Run the failing script locally to reproduce:
+             - `scripts/validate-iso-prefix.sh`
+             - `scripts/build-obsidian-iso.sh`
+             - `scripts/qemu-boot-test.sh`
+          4. Use GitHub Copilot to analyze errors and suggest fixes
+          
+          ## Copilot Patch Suggestion Hook
+          
+          To get Copilot to suggest a fix, copy the error message from the failed job
+          and ask:
+          
+          ```
+          This Obsidian ISO build failed with the following error:
+          [PASTE ERROR HERE]
+          
+          Please analyze the error and suggest a patch to fix it.
+          ```
+          
+          EOF
+          
+          cat artifacts/failures/CONSOLIDATED_SUMMARY.md
+
+      - name: Upload consolidated failure report
+        uses: actions/upload-artifact@v4
+        with:
+          name: failure-summary
+          path: artifacts/failures/
