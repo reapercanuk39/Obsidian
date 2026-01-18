@@ -1,8 +1,8 @@
-# 🛡️ Obsidian OS v2.0 HARDENED
+# 🛡️ Obsidian OS v2.1 FORTRESS
 
 > **Forged in Molten Steel, Armored for Security**
 
-[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%202.0%20HARDENED-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
+[![Download Obsidian OS](https://img.shields.io/badge/Download-Obsidian%202.1%20FORTRESS-FF7A1A?style=for-the-badge&logo=linux&logoColor=white)](https://github.com/reapercanuk39/Obsidian/releases/latest)
 [![Security](https://img.shields.io/badge/Security-HARDENED-green?style=for-the-badge&logo=shield&logoColor=white)](docs/SECURITY-FEATURES.md)
 [![License](https://img.shields.io/badge/License-GPL--3.0-blue?style=for-the-badge)](LICENSE)
 
@@ -30,11 +30,11 @@ Obsidian OS is a **security-hardened Linux distribution** based on Debian 12 (Bo
 
 ## 📥 Download
 
-### Latest Release: v2.0 HARDENED
+### Latest Release: v2.1 FORTRESS (Installer Edition)
 
 | File | Size | MD5 |
 |------|------|-----|
-| [Obsidian-2.0-HARDENED.iso](https://github.com/reapercanuk39/Obsidian/releases/download/v2.0/Obsidian-2.0-HARDENED.iso) | 1.4 GB | `7f9ac97cd9f4bc83954f22ae829f39d8` |
+| [Obsidian-2.1-FORTRESS.iso](https://github.com/reapercanuk39/Obsidian/releases/download/v2.1/Obsidian-2.1-FORTRESS.iso) | 1.3 GB | `6a1803d3a37565646bce2ea5ae141880` |
 
 **[⬇️ Download from GitHub Releases](https://github.com/reapercanuk39/Obsidian/releases/latest)**
 
@@ -42,13 +42,30 @@ Obsidian OS is a **security-hardened Linux distribution** based on Debian 12 (Bo
 
 ## 🚀 Quick Start
 
+### Option A: Install to USB SSD (Recommended)
+
+1. **Burn ISO to a small USB** (8GB+ test USB)
+2. **Boot from the test USB**
+3. **At boot menu, select "Install Obsidian OS to USB SSD"**
+   - Or click "Install Obsidian OS" on the desktop
+4. **Select your target drive** (e.g., 256GB USB SSD)
+5. **Complete installation** and boot from your SSD
+
+This gives you a **fully installed OS** with:
+- ✅ Full persistence (all changes saved)
+- ✅ Faster boot (no live decompression)
+- ✅ Hardware detection for your machine
+- ✅ Normal package updates
+
+### Option B: Live Boot (No Installation)
+
 ### 1. Download & Verify
 ```bash
 # Download ISO
-wget https://github.com/reapercanuk39/Obsidian/releases/download/v2.0/Obsidian-2.0-HARDENED.iso
+wget https://github.com/reapercanuk39/Obsidian/releases/download/v2.1/Obsidian-2.1-FORTRESS.iso
 
 # Verify checksum
-echo "7f9ac97cd9f4bc83954f22ae829f39d8  Obsidian-2.0-HARDENED.iso" | md5sum -c
+echo "6a1803d3a37565646bce2ea5ae141880  Obsidian-2.1-FORTRESS.iso" | md5sum -c
 ```
 
 ### 2. Create Bootable USB
@@ -56,13 +73,13 @@ echo "7f9ac97cd9f4bc83954f22ae829f39d8  Obsidian-2.0-HARDENED.iso" | md5sum -c
 **Windows (Rufus)**:
 1. Download [Rufus](https://rufus.ie/)
 2. Select your USB drive
-3. Select `Obsidian-2.0-HARDENED.iso`
+3. Select `Obsidian-2.1-FORTRESS.iso`
 4. ⚠️ Choose **DD Image mode** when prompted
 5. Click START
 
 **Linux**:
 ```bash
-sudo dd if=Obsidian-2.0-HARDENED.iso of=/dev/sdX bs=4M status=progress conv=fsync
+sudo dd if=Obsidian-2.1-FORTRESS.iso of=/dev/sdX bs=4M status=progress conv=fsync
 ```
 
 ### 3. Boot & Login
@@ -76,7 +93,7 @@ sudo dd if=Obsidian-2.0-HARDENED.iso of=/dev/sdX bs=4M status=progress conv=fsyn
 
 ## 🛡️ Security Features
 
-Obsidian 2.0 HARDENED implements defense-in-depth security:
+Obsidian 2.1 FORTRESS implements defense-in-depth security:
 
 ### Kernel Hardening
 - Full ASLR (`kernel.randomize_va_space = 2`)
@@ -111,7 +128,7 @@ Obsidian 2.0 HARDENED implements defense-in-depth security:
 
 ## 📊 Comparison
 
-| Feature | Standard Debian | Obsidian 2.0 |
+| Feature | Standard Debian | Obsidian 2.1 |
 |---------|-----------------|--------------|
 | Kernel Hardening | ❌ | ✅ 25+ settings |
 | Firewall | ❌ Empty | ✅ DROP policy |
@@ -147,9 +164,11 @@ sudo fail2ban-client status
 
 ## 📚 Documentation
 
-- [Security Features](docs/SECURITY-FEATURES.md)
-- [Build Changelog](docs/REBUILD-CHANGELOG.md)
-- [Post-Burn Verification](docs/POST-BURN-USB-VERIFICATION.md)
+> **Note**: Please read all documentation files in the `docs/` folder for complete information.
+
+- [Changelog](docs/CHANGELOG.md)
+- [Development Notes](docs/DEV-NOTES.md)
+- [USB SSD Installation Guide](docs/USB-SSD-GUIDE.md)
 
 ---
 
@@ -172,7 +191,7 @@ cd Obsidian
 ./scripts/rebuild-iso.sh
 
 # Test in QEMU
-qemu-system-x86_64 -cdrom Obsidian-2.0-HARDENED.iso -m 4096 -enable-kvm
+qemu-system-x86_64 -cdrom Obsidian-2.1-FORTRESS.iso -m 4096 -enable-kvm
 ```
 
 ---
